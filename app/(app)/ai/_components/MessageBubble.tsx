@@ -1,6 +1,6 @@
-import { AIAvatar } from "@/components/AIAvatar";
 import { DARK_GRADIENT } from "@/lib/gradients";
 import type { Message } from "../_lib/types";
+import { AIAvatar } from "@/components/AIAvatar";
 
 export function MessageBubble({ message }: { message: Message }) {
   if (message.role === "user") {
