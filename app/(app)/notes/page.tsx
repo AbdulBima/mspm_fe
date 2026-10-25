@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { PageLoader } from "@/components/PageLoader";
 import { Drawer } from "@/components/Drawer";
 import { useSprint } from "@/lib/sprint-context";
 import type { NoteType } from "@/lib/types";
@@ -54,10 +55,7 @@ export default function NotesPage() {
 
   if (sprintLoading) {
     return (
-      <div className="flex h-64 flex-col items-center justify-center gap-3">
-        <div className="h-4 w-4 animate-spin rounded-full border-2 border-[#E7E5E2] border-t-[#1D2B64]" />
-        <p className="text-xs text-[#84828C]">Loading</p>
-      </div>
+      <PageLoader label="Loading" />
     );
   }
 
@@ -69,11 +67,11 @@ export default function NotesPage() {
   const totalCount = countsSource.length;
 
   return (
-    <div className="max-w-5xl mx-auto space-y-7 p-6 md:p-8">
+    <div className="mx-auto max-w-5xl space-y-6">
       <NotesHeader disabled={tasks.length === 0} onAddNote={() => setShowAdd(true)} />
 
       {showAdd && (
-        <Drawer title="Add Note" maxWidthCls="max-w-xl" onClose={() => setShowAdd(false)}>
+        <Drawer eyebrow="Notes" title="Add note" maxWidthCls="max-w-xl" onClose={() => setShowAdd(false)}>
           <AddNoteForm
             tasks={tasks}
             members={members}
@@ -96,10 +94,7 @@ export default function NotesPage() {
       />
 
       {loading ? (
-        <div className="flex items-center gap-2.5 justify-center py-10">
-          <div className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-[#E7E5E2] border-t-[#1D2B64]" />
-          <p className="text-xs text-[#84828C]">Loading</p>
-        </div>
+        <PageLoader label="Loading notes" />
       ) : notes.length === 0 ? (
         <NotesEmptyState filtered={filtered} />
       ) : (

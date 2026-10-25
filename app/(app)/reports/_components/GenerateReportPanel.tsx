@@ -18,9 +18,6 @@ interface GenerateReportPanelProps {
   generate: () => void;
 }
 
-// Props here are intentionally the exact shape useGenerateReport() returns —
-// this panel exists purely to render that hook's state, so page.tsx spreads
-// the hook's result straight in rather than re-listing every field twice.
 export function GenerateReportPanel({
   reportType,
   setReportType,
@@ -36,16 +33,16 @@ export function GenerateReportPanel({
   generate,
 }: GenerateReportPanelProps) {
   return (
-    <div className="rounded-xl border border-[#E7E5E2] bg-white p-6 lg:col-span-1">
-      <h3 className="mb-4 text-sm font-semibold text-[#0B0C0F]">Generate a report</h3>
+    <div className="card p-5 sm:p-6 lg:col-span-1 lg:self-start">
+      <h3 className="mb-4 text-base font-bold text-ink">Generate a report</h3>
       <div className="space-y-4">
-        <div className="flex gap-1 rounded-lg border border-[#E7E5E2] bg-[#FAFAF9] p-1">
+        <div className="flex gap-1 rounded-xl border border-line bg-subtle p-1">
           {(["daily", "weekly", "sprint"] as ReportType[]).map((t) => (
             <button
               key={t}
               onClick={() => setReportType(t)}
-              className={`flex-1 rounded-md py-1.5 text-xs font-medium transition-colors ${
-                reportType === t ? "bg-white text-[#0B0C0F] shadow-sm" : "text-[#84828C] hover:text-[#0B0C0F]"
+              className={`flex-1 rounded-lg py-2 text-xs font-semibold transition-all ${
+                reportType === t ? "bg-brand text-white shadow-sm" : "text-ink-mute hover:text-ink"
               }`}
             >
               {TYPE_LABEL[t]}
@@ -82,12 +79,12 @@ export function GenerateReportPanel({
           />
         </div>
 
-        <label className="flex items-center gap-2 text-xs text-[#54525C]">
+        <label className="flex items-center gap-2 text-xs text-ink-soft">
           <input
             type="checkbox"
             checked={includeAi}
             onChange={(e) => setIncludeAi(e.target.checked)}
-            className="accent-[#1D2B64]"
+            className="h-4 w-4 accent-accent"
           />
           Include an AI-written narrative summary
         </label>
@@ -95,9 +92,9 @@ export function GenerateReportPanel({
         <button
           onClick={generate}
           disabled={generating}
-          className="flex w-full items-center justify-center gap-1.5 rounded-lg bg-[#0B0C0F] py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#1D2B64] disabled:opacity-40"
+          className="btn-primary w-full"
         >
-          <Sparkles size={14} /> {generating ? "Compiling…" : "Generate report"}
+          {generating ? <span className="spinner" /> : <Sparkles size={15} />} {generating ? "Compiling…" : "Generate report"}
         </button>
       </div>
     </div>

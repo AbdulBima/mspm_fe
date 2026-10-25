@@ -16,20 +16,20 @@ export function GoalsTable({ goals, contributorsByGoal }: GoalsTableProps) {
   const [expandedGoalId, setExpandedGoalId] = useState<string | null>(null);
 
   return (
-    <div className="overflow-hidden rounded-xl border border-[#E7E5E2] bg-white">
+    <div className="card overflow-hidden">
       <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse">
+        <table className="w-full min-w-[760px] border-collapse text-left">
           <thead>
-            <tr className="border-b border-[#E7E5E2]">
-              <th className="px-5 py-3 text-xs font-medium text-[#84828C] w-12">#</th>
-              <th className="px-5 py-3 text-xs font-medium text-[#84828C]">Goal</th>
-              <th className="px-5 py-3 text-xs font-medium text-[#84828C] text-center w-28">Tasks</th>
-              <th className="px-5 py-3 text-xs font-medium text-[#84828C] w-36">Team</th>
-              <th className="px-5 py-3 text-xs font-medium text-[#84828C] w-40">Status</th>
-              <th className="px-5 py-3 text-xs font-medium text-[#84828C] text-right w-48">Completion</th>
+            <tr className="border-b border-line">
+              <th className="px-5 py-3 text-[11px] font-semibold tracking-wide uppercase text-ink-mute w-12">#</th>
+              <th className="px-5 py-3 text-[11px] font-semibold tracking-wide uppercase text-ink-mute">Goal</th>
+              <th className="px-5 py-3 text-[11px] font-semibold tracking-wide uppercase text-ink-mute text-center w-28">Tasks</th>
+              <th className="px-5 py-3 text-[11px] font-semibold tracking-wide uppercase text-ink-mute w-36">Team</th>
+              <th className="px-5 py-3 text-[11px] font-semibold tracking-wide uppercase text-ink-mute w-40">Status</th>
+              <th className="px-5 py-3 text-[11px] font-semibold tracking-wide uppercase text-ink-mute text-right w-48">Completion</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#EEEDEB]">
+          <tbody className="divide-y divide-line">
             {goals.map((g, index) => (
               <GoalRow
                 key={g.goal_id}

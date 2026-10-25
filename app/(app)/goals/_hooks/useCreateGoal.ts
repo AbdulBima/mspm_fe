@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { api } from "@/lib/api";
+import { notify } from "@/lib/notify";
 
 /** Owns the new-goal form's fields and submit flow, kept separate from the drawer's chrome/layout. */
 export function useCreateGoal(sprintId: string, onDone: () => void) {
@@ -10,11 +11,14 @@ export function useCreateGoal(sprintId: string, onDone: () => void) {
   const [busy, setBusy] = useState(false);
 
   async function submit() {
-    if (!title.trim()) return;
+    if (busy || !title.trim()) return;
     setBusy(true);
     try {
-      await api.sprints.createGoal(sprintId, { title, description: description || undefined });
+      await api.sprints.createGoal(sprintId, { title: title.trim(), description: description.trim() || undefined });
+      notify.success("Goal added.");
       onDone();
+    } catch (err) {
+      notify.error(err, "Couldn't add the goal.");
     } finally {
       setBusy(false);
     }

@@ -16,7 +16,7 @@ export function StatusPillSelect({ status, busy, onChange }: StatusPillSelectPro
         value={status}
         disabled={busy}
         onChange={(e) => onChange(e.target.value as TaskStatus)}
-        className="peer cursor-pointer appearance-none rounded-full border-0 py-1.5 pl-3 pr-7 text-[11px] font-medium uppercase tracking-wide outline-none transition-opacity hover:opacity-80 focus:ring-2 focus:ring-black/10 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-40"
+        className="peer cursor-pointer appearance-none rounded-full border-0 py-1.5 pl-3 pr-7 text-[11px] font-semibold outline-none transition-opacity hover:opacity-80 focus:ring-2 focus:ring-black/10 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-40"
         style={{ color: s.color, backgroundColor: s.bg }}
       >
         {STATUS_OPTIONS.map((opt) => (

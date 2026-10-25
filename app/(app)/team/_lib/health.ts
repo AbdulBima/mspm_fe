@@ -15,6 +15,6 @@ export const RING_COLOR: Record<Health, string> = {
   blocked: "#e11d48",
   stale: "#b45309",
   done: "#059669",
-  progress: "#a1a1aa",
-  none: "#e4e4e7",
+  progress: "#6F01D0",
+  none: "#ECEAF3",
 };

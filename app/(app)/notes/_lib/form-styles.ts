@@ -6,4 +6,4 @@
  * identical to the other pages, so that one comes from the shared module.
  */
 export const inputCls =
-  "w-full rounded-xl border border-[#E7E5E2] bg-white px-3.5 py-2.5 text-sm text-[#0B0C0F] placeholder:text-[#B4B2AC] transition-colors focus:outline-none focus:border-[#1D2B64] focus:ring-2 focus:ring-[#1D2B64]/10";
+  "w-full rounded-xl border border-line bg-white px-3.5 py-2.5 text-sm text-ink placeholder:text-ink-faint transition-colors focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand/10";

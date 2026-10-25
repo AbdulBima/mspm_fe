@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { notify } from "@/lib/notify";
 import { api } from "@/lib/api";
 import type { Member } from "@/lib/types";
 
@@ -17,6 +18,8 @@ export function useRoster() {
     try {
       const list = await api.members.list();
       setMembers(list.filter((m) => m.active).sort((a, b) => a.name.localeCompare(b.name)));
+    } catch (err) {
+      notify.error(err);
     } finally {
       setLoading(false);
     }

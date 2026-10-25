@@ -37,35 +37,33 @@ export function AttendanceRoster({
   onToggleTask,
   onSetNote,
 }: AttendanceRosterProps) {
-  // Only one member's task picker can be open at a time — scoped here since
-  // it's pure UI state, not data the rest of the page needs to know about.
   const [openTaskPickerFor, setOpenTaskPickerFor] = useState<string | null>(null);
 
   return (
-    <div className="rounded-xl border border-[#e3e0d8] bg-white">
-      <div className="flex items-center justify-between rounded-t-xl border-b border-[#e3e0d8] bg-[#faf9f6] px-5 py-3">
-        <p className="text-xs font-medium uppercase tracking-wide text-[#766f60]">
+    <div className="card">
+      <div className="flex items-center justify-between rounded-t-2xl border-b border-line bg-subtle px-5 py-3">
+        <p className="text-[11px] font-semibold uppercase tracking-wide text-ink-mute">
           Roll call — {formatDate(`${selectedDate}T00:00:00`)}
         </p>
-        {dayLoading && <span className="text-[11px] text-[#a39c8c]">Loading…</span>}
+        {dayLoading && <span className="text-[11px] text-ink-faint">Loading…</span>}
       </div>
 
       {membersLoading ? (
-        <p className="px-5 py-10 text-center text-sm text-[#766f60]">Loading team…</p>
+        <p className="px-5 py-10 text-center text-sm text-ink-mute">Loading team…</p>
       ) : members.length === 0 ? (
         <div className="px-5 py-10">
           <EmptyState
             title="No active team members yet"
             description="Add people to the sprint team before taking attendance."
             action={
-              <Link href="/team" className="text-sm font-medium text-[#ad8a3d] hover:underline">
+              <Link href="/team" className="text-sm font-medium text-accent hover:underline">
                 Go to Team
               </Link>
             }
           />
         </div>
       ) : (
-        <ul className="divide-y divide-[#eeece6]">
+        <ul className="divide-y divide-line">
           {members.map((m) => (
             <AttendanceRosterRow
               key={m.member_id}

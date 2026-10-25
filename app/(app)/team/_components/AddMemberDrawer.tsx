@@ -1,114 +1,108 @@
 "use client";
 
-import { useEffect } from "react";
-import { createPortal } from "react-dom";
-import { motion } from "framer-motion";
-import { X } from "lucide-react";
-import { inputCls, labelCls } from "@/lib/form-styles-zinc";
-import type { Discipline } from "@/lib/types";
+import { useState } from "react";
+import { CheckCircle2 } from "lucide-react";
+import { Drawer } from "@/components/Drawer";
+import { AccessCodeCard } from "@/components/AccessCodeCard";
+import { inputCls, labelCls } from "@/lib/form-styles";
+import type { Discipline, Member } from "@/lib/types";
 import { DISCIPLINE_LABEL } from "../_lib/constants";
 import { useAddMember } from "../_hooks/useAddMember";
 
-// Kept as its own bespoke drawer rather than the shared @/components/Drawer
-// — this is the only drawer in the app with framer-motion enter/exit
-// animation. Even within this page's own zinc/amber family, SprintDrawer
-// (no animation) and this one (animated) already diverge, so folding this
-// into the shared static Drawer would either lose the animation here or
-// require threading motion support through a component every other caller
-// doesn't need.
+export function AddMemberDrawer({ onClose, onDone }: { onClose: () => void; onDone: () => void }) {
+  const [created, setCreated] = useState<Member | null>(null);
+  const form = useAddMember((member) => {
+    if (member.access_code) setCreated(member);
+    else onDone();
+  });
 
-interface AddMemberDrawerProps {
-  onClose: () => void;
-  onDone: () => void;
-}
-
-export function AddMemberDrawer({ onClose, onDone }: AddMemberDrawerProps) {
-  const { name, setName, roleTitle, setRoleTitle, discipline, setDiscipline, busy, submit } = useAddMember(onDone);
-
-  useEffect(() => {
-    function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") onClose();
-    }
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [onClose]);
-
-  return createPortal(
-    <>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.15 }}
-        className="fixed inset-0 z-40 bg-zinc-900/20 backdrop-blur-[2px]"
-        onClick={onClose}
-      />
-
-      <motion.div
-        initial={{ x: "100%" }}
-        animate={{ x: 0 }}
-        exit={{ x: "100%" }}
-        transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-        className="fixed right-0 top-0 bottom-0 z-50 flex w-full max-w-md flex-col overflow-hidden bg-white shadow-2xl"
-      >
-        <div className="flex shrink-0 items-center justify-between border-b border-zinc-100 px-6 py-5">
-          <div>
-            <p className="questrial-regular mb-1 text-[9px] uppercase tracking-widest text-amber-700">Sprint workspace</p>
-            <h2 className="font-display text-base font-semibold text-zinc-900">Add member</h2>
-          </div>
-          <button
-            onClick={onClose}
-            aria-label="Close"
-            className="flex h-8 w-8 items-center justify-center rounded-xl bg-zinc-50 text-zinc-400 transition-colors hover:bg-zinc-100"
-          >
-            <X size={15} />
+  if (created) {
+    return (
+      <Drawer
+        eyebrow="Team"
+        title={`${created.name} added`}
+        onClose={onDone}
+        footer={
+          <button onClick={onDone} className="btn-primary flex-1">
+            Done
           </button>
+        }
+      >
+        <div className="flex items-center gap-3 rounded-2xl bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">
+          <CheckCircle2 size={18} /> {created.name} can now sign in once they activate.
         </div>
+        <AccessCodeCard
+          name={created.name}
+          email={created.email}
+          code={created.access_code!}
+          expiresAt={created.access_code_expires_at}
+        />
+      </Drawer>
+    );
+  }
 
-        <div className="flex-1 space-y-6 overflow-y-auto p-6">
-          <div>
-            <span className={labelCls}>Name *</span>
-            <input autoFocus value={name} onChange={(e) => setName(e.target.value)} required className={inputCls} placeholder="Ada Chen" />
-          </div>
-          <div>
-            <span className={labelCls}>Role title *</span>
-            <input value={roleTitle} onChange={(e) => setRoleTitle(e.target.value)} required placeholder="Backend Engineer" className={inputCls} />
-          </div>
-          <div>
-            <span className={labelCls}>Discipline</span>
-            <div className="flex flex-wrap gap-2">
-              {Object.entries(DISCIPLINE_LABEL).map(([value, label]) => (
-                <button
-                  key={value}
-                  type="button"
-                  onClick={() => setDiscipline(value as Discipline)}
-                  className={`rounded-full border px-3.5 py-2 text-xs font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600 ${
-                    discipline === value
-                      ? "border-amber-600 bg-amber-50 text-amber-800"
-                      : "border-zinc-200 text-zinc-500 hover:border-zinc-300 hover:bg-zinc-50"
-                  }`}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div className="flex shrink-0 gap-3 border-t border-zinc-100 px-6 py-5">
-          <button onClick={onClose} className="flex-1 rounded-xl border border-zinc-200 py-3 text-xs font-semibold uppercase tracking-widest text-zinc-500 transition-colors hover:bg-zinc-50">
+  return (
+    <Drawer
+      eyebrow="Team"
+      title="Add member"
+      onClose={onClose}
+      footer={
+        <>
+          <button onClick={onClose} className="btn-secondary flex-1">
             Cancel
           </button>
           <button
-            onClick={submit}
-            disabled={busy || !name.trim() || !roleTitle.trim()}
-            className="flex-1 rounded-xl bg-zinc-900 py-3 text-xs font-semibold uppercase tracking-widest text-white transition-all hover:bg-zinc-800 disabled:opacity-40"
+            onClick={form.submit}
+            disabled={form.busy || !form.name.trim() || !form.roleTitle.trim()}
+            className="btn-primary flex-1"
           >
-            {busy ? "Adding…" : "Add member"}
+            {form.busy && <span className="spinner" />}
+            {form.busy ? "Adding…" : "Add member"}
           </button>
+        </>
+      }
+    >
+      {form.error && <p className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">{form.error}</p>}
+      <div>
+        <label className={labelCls}>Name *</label>
+        <input autoFocus value={form.name} onChange={(e) => form.setName(e.target.value)} required className={inputCls} placeholder="Ada Chen" />
+      </div>
+      <div>
+        <label className={labelCls}>Role title *</label>
+        <input value={form.roleTitle} onChange={(e) => form.setRoleTitle(e.target.value)} required placeholder="Backend Engineer" className={inputCls} />
+      </div>
+      <div>
+        <label className={labelCls}>Work email</label>
+        <input
+          type="email"
+          value={form.email}
+          onChange={(e) => form.setEmail(e.target.value)}
+          placeholder="ada@company.com"
+          className={inputCls}
+          autoComplete="off"
+        />
+        <p className="mt-1.5 text-[11px] text-ink-mute">Add an email to give them a login for daily reports.</p>
+      </div>
+      <div>
+        <label className={labelCls}>Discipline</label>
+        <div className="flex flex-wrap gap-2">
+          {Object.entries(DISCIPLINE_LABEL).map(([value, label]) => (
+            <button
+              key={value}
+              type="button"
+              onClick={() => form.setDiscipline(value as Discipline)}
+              aria-pressed={form.discipline === value}
+              className={`rounded-full border px-3.5 py-2 text-xs font-semibold transition-colors ${
+                form.discipline === value
+                  ? "border-accent bg-accent-soft text-accent"
+                  : "border-line-strong text-ink-soft hover:border-accent/40 hover:bg-subtle"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
         </div>
-      </motion.div>
-    </>,
-    document.body
+      </div>
+    </Drawer>
   );
 }

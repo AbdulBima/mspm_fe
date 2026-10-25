@@ -9,7 +9,8 @@ export function DecisionForm({ sprintId, onDone }: { sprintId: string; onDone: (
 
   return (
     <Drawer
-      title="Log Decision"
+      eyebrow="Tracking"
+      title="Log decision"
       onClose={onDone}
       footer={
         <>

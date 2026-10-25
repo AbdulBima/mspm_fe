@@ -1,6 +1,6 @@
 import type { Member, NoteType } from "@/lib/types";
 import { NOTE_TYPE_META, NOTE_TYPE_OPTIONS } from "../_lib/constants";
-import { CustomSelect } from "./CustomSelect";
+import { CustomSelect } from "@/components/CustomSelect";
 import { TypeChip } from "./TypeChip";
 
 interface NoteTypeFilterBarProps {
@@ -28,8 +28,8 @@ export function NoteTypeFilterBar({
         active={typeFilter === "all"}
         label="All"
         count={totalCount}
-        color="#0B0C0F"
-        bg="#EEEDEB"
+        color="#16122E"
+        bg="#ECEAF3"
         onClick={() => onTypeFilterChange("all")}
       />
       {NOTE_TYPE_OPTIONS.map((t) => (
@@ -44,11 +44,11 @@ export function NoteTypeFilterBar({
         />
       ))}
 
-      <div className="ml-auto">
+      <div className="w-full sm:ml-auto sm:w-auto">
         <CustomSelect
           value={memberFilter}
           onChange={onMemberFilterChange}
-          widthCls="w-44"
+          widthCls="w-full sm:w-48"
           options={[
             { value: "all", label: "Everyone" },
             ...members.map((m) => ({ value: m.member_id, label: m.name, color: m.color_tag })),

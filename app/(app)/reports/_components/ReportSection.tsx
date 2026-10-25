@@ -8,10 +8,10 @@ interface ReportSectionProps {
 
 export function ReportSection({ title, items, tone }: ReportSectionProps) {
   if (!items || items.length === 0) return null;
-  const color = tone ? TONE_CLASS[tone] : "text-[#54525C]";
+  const color = tone ? TONE_CLASS[tone] : "text-ink-soft";
   return (
     <div className="mt-5">
-      <p className="mb-1.5 text-[11px] font-medium text-[#84828C]">{title}</p>
+      <p className="mb-1.5 text-[11px] font-semibold tracking-wide text-ink-mute uppercase">{title}</p>
       <ul className="space-y-1">
         {items.map((it, i) => (
           <li key={i} className={`text-sm ${color}`}>

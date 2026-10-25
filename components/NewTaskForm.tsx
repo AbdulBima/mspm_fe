@@ -2,12 +2,9 @@
 
 import { useState } from "react";
 import { api } from "@/lib/api";
+import { notify } from "@/lib/notify";
+import { inputCls, labelCls } from "@/lib/form-styles";
 import type { Goal } from "@/lib/types";
-
-const inputCls =
-  "w-full rounded-lg border border-[#E7E5E2] bg-white px-3.5 py-2.5 text-sm text-[#0B0C0F] placeholder:text-[#B4B2AC] transition-colors focus:outline-none focus:border-[#1D2B64] focus:ring-2 focus:ring-[#1D2B64]/10";
-
-const labelCls = "mb-1.5 block text-[11px] font-medium text-[#84828C]";
 
 interface CreateTaskInput {
   sprint_id: string;
@@ -41,12 +38,13 @@ export function NewTaskForm({
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
+    if (busy || !title.trim()) return;
     setBusy(true);
     try {
       const payload = {
         sprint_id: sprintId,
         member_id: memberId,
-        title,
+        title: title.trim(),
         description: description || undefined,
         expectation: expectation || undefined,
         goal_id: goalId || undefined,
@@ -54,7 +52,10 @@ export function NewTaskForm({
         due_date: dueDate || undefined,
       } satisfies CreateTaskInput;
       await api.tasks.create(payload);
+      notify.success("Task added.");
       onDone();
+    } catch (err) {
+      notify.error(err, "Couldn't add the task.");
     } finally {
       setBusy(false);
     }
@@ -116,18 +117,11 @@ export function NewTaskForm({
       </div>
 
       <div className="flex justify-end gap-3 pt-1">
-        <button
-          type="button"
-          onClick={onDone}
-          className="rounded-lg border border-[#E7E5E2] px-4 py-2.5 text-sm font-medium text-[#54525C] transition-colors hover:bg-[#FAFAF9]"
-        >
+        <button type="button" onClick={onDone} className="btn-secondary">
           Cancel
         </button>
-        <button
-          type="submit"
-          disabled={busy}
-          className="rounded-lg bg-[#0B0C0F] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#1D2B64] disabled:opacity-40"
-        >
+        <button type="submit" disabled={busy} className="btn-primary">
+          {busy && <span className="spinner" />}
           {busy ? "Adding…" : "Add task"}
         </button>
       </div>

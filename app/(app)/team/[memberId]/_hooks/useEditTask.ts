@@ -2,14 +2,10 @@
 
 import { useState } from "react";
 import { api } from "@/lib/api";
+import { notify } from "@/lib/notify";
 import type { Task, TaskStatus } from "@/lib/types";
 
-/**
- * Owns the edit-task form's field state and submit flow. Cleared fields are
- * sent as `null` rather than omitted — the backend's PATCH uses
- * exclude_unset, so a null actually unsets the field, while omitting it
- * would leave the previous value untouched.
- */
+/** Cleared fields are sent as null so the backend's exclude_unset PATCH actually clears them. */
 export function useEditTask(task: Task, onDone: () => void) {
   const [title, setTitle] = useState(task.title);
   const [description, setDescription] = useState(task.description ?? "");
@@ -21,10 +17,11 @@ export function useEditTask(task: Task, onDone: () => void) {
   const [busy, setBusy] = useState(false);
 
   async function submit() {
+    if (busy || !title.trim()) return;
     setBusy(true);
     try {
       await api.tasks.update(task.task_id, {
-        title,
+        title: title.trim(),
         description: description || null,
         expectation: expectation || null,
         goal_id: goalId || null,
@@ -32,7 +29,10 @@ export function useEditTask(task: Task, onDone: () => void) {
         status,
         due_date: dueDate || null,
       });
+      notify.success("Task updated.");
       onDone();
+    } catch (err) {
+      notify.error(err, "Couldn't save the task.");
     } finally {
       setBusy(false);
     }

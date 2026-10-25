@@ -2,16 +2,9 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { api } from "@/lib/api";
+import { notify } from "@/lib/notify";
 import type { Member, NoteType, Task, TaskNoteWithContext } from "@/lib/types";
 
-/**
- * Loads notes filtered by type + member, plus a second unfiltered-by-type
- * "counts source" (still scoped to the member filter) so the type chips'
- * counts stay accurate no matter which chip is currently active. Unlike
- * the board's task filters, which are applied client-side against an
- * already-loaded list, notes filtering happens server-side — this hook
- * re-fetches whenever typeFilter or memberFilter changes, not just sprint.
- */
 export function useNotesData(sprintId: string | undefined, typeFilter: NoteType | "all", memberFilter: string) {
   const [notes, setNotes] = useState<TaskNoteWithContext[]>([]);
   const [countsSource, setCountsSource] = useState<TaskNoteWithContext[]>([]);
@@ -33,6 +26,8 @@ export function useNotesData(sprintId: string | undefined, typeFilter: NoteType 
       setCountsSource(countsSrc);
       setTasks(t);
       setMembers(m);
+    } catch (err) {
+      notify.error(err, "Couldn't load notes.");
     } finally {
       setLoading(false);
     }
@@ -56,8 +51,13 @@ export function useNotesData(sprintId: string | undefined, typeFilter: NoteType 
   const removeNote = useCallback(
     async (noteId: string) => {
       if (!confirm("Delete this note? This can't be undone.")) return;
-      await api.tasks.removeNote(noteId);
-      await reload();
+      try {
+        await api.tasks.removeNote(noteId);
+        notify.success("Note deleted.");
+        await reload();
+      } catch (err) {
+        notify.error(err, "Couldn't delete the note.");
+      }
     },
     [reload]
   );

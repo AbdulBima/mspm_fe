@@ -28,25 +28,25 @@ export function MeetingsTab({ sprintId }: { sprintId: string }) {
 
       <TableShell>
         <thead>
-          <tr className="border-b border-[#E7E5E2] bg-[#F3F2EF]">
+          <tr className="border-b border-line bg-subtle">
             <th className={thCls}>Type</th>
             <th className={`${thCls} w-32`}>Date</th>
             <th className={`${thCls} w-36 text-right`}>Action items</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-[#EEEDEB]">
+        <tbody className="divide-y divide-line">
           {meetings.map((m) => {
             const done = m.action_items.filter((ai) => ai.done).length;
             return (
-              <tr key={m.meeting_id} className="transition-colors hover:bg-[#FAFAF9]">
-                <td className="px-5 py-3.5 text-sm font-medium capitalize text-[#0B0C0F]">{m.meeting_type.replace(/_/g, " ")}</td>
-                <td className="px-5 py-3.5 text-[13px] text-[#54525C]">{formatDate(m.meeting_date)}</td>
-                <td className="px-5 py-3.5 text-right text-[13px] tabular-nums text-[#54525C]">
+              <tr key={m.meeting_id} className="transition-colors hover:bg-subtle">
+                <td className="px-5 py-3.5 text-sm font-medium capitalize text-ink">{m.meeting_type.replace(/_/g, " ")}</td>
+                <td className="px-5 py-3.5 text-[13px] text-ink-soft">{formatDate(m.meeting_date)}</td>
+                <td className="px-5 py-3.5 text-right text-[13px] tabular-nums text-ink-soft">
                   {m.action_items.length === 0 ? (
-                    <span className="text-[#B4B2AC]">None</span>
+                    <span className="text-ink-faint">None</span>
                   ) : (
                     <>
-                      <span className={done === m.action_items.length ? "font-medium text-[#16794D]" : "font-medium text-[#0B0C0F]"}>{done}</span>
+                      <span className={done === m.action_items.length ? "font-medium text-[#16794D]" : "font-medium text-ink"}>{done}</span>
                       /{m.action_items.length} done
                     </>
                   )}

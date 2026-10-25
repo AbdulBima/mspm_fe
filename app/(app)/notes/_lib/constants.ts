@@ -12,4 +12,4 @@ export const NOTE_TYPE_META: Record<NoteType, { label: string; color: string; bg
 
 export const PAGE_SIZE = 10;
 
-export const CARD_SHADOW_HOVER = "hover:shadow-[0_2px_4px_rgba(11,12,15,0.06),0_16px_28px_-12px_rgba(11,12,15,0.16)]";
+export const CARD_SHADOW_HOVER = "hover:shadow-[0_2px_4px_rgba(22,18,46,0.06),0_16px_28px_-12px_rgba(22,18,46,0.16)]";

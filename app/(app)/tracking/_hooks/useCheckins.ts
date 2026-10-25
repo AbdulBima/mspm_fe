@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { api } from "@/lib/api";
+import { notify } from "@/lib/notify";
 import type { Checkin, Member } from "@/lib/types";
 
 export function useCheckins(sprintId: string) {
@@ -9,9 +10,13 @@ export function useCheckins(sprintId: string) {
   const [members, setMembers] = useState<Member[]>([]);
 
   const reload = useCallback(async () => {
-    const [c, m] = await Promise.all([api.checkins.list(sprintId), api.members.list()]);
-    setCheckins(c);
-    setMembers(m);
+    try {
+      const [c, m] = await Promise.all([api.checkins.list(sprintId), api.members.list()]);
+      setCheckins(c);
+      setMembers(m);
+    } catch (err) {
+      notify.error(err, "Couldn't load check-ins.");
+    }
   }, [sprintId]);
 
   useEffect(() => {

@@ -12,16 +12,16 @@ export function SuggestionChip({ text, onClick }: { text: string; onClick: () =>
       onMouseLeave={() => setHovered(false)}
       className="flex items-center gap-2.5 rounded-2xl border px-4 py-3 text-left text-sm transition-all duration-200"
       style={{
-        backgroundColor: hovered ? "#FAFAF9" : "#FFFFFF",
-        borderColor: hovered ? "rgba(29,43,100,0.25)" : "#E7E5E2",
-        color: "#54525C",
+        backgroundColor: hovered ? "#F6F4FB" : "#FFFFFF",
+        borderColor: hovered ? "rgba(111,1,208,0.3)" : "#ECEAF3",
+        color: "#4A4763",
         transform: hovered ? "translateY(-1px)" : "translateY(0)",
         boxShadow: hovered
-          ? "0 2px 4px rgba(11,12,15,0.06), 0 12px 24px -10px rgba(11,12,15,0.14)"
-          : "0 1px 2px rgba(11,12,15,0.04)",
+          ? "0 2px 4px rgba(22,18,46,0.06), 0 12px 24px -10px rgba(22,18,46,0.14)"
+          : "0 1px 2px rgba(22,18,46,0.04)",
       }}
     >
-      <MessageCircle size={14} color="#1D2B64" className="shrink-0" />
+      <MessageCircle size={14} color="#6F01D0" className="shrink-0" />
       {text}
     </button>
   );

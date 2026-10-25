@@ -1,26 +1,22 @@
 "use client";
 
+import { localISODate } from "@/lib/dates";
 import { useState } from "react";
 import { api } from "@/lib/api";
+import { notify } from "@/lib/notify";
 import type { Sprint } from "@/lib/types";
 import { splitLines } from "../_lib/text";
 
 type SprintFormConfig = { mode: "create" } | { mode: "edit"; sprint: Sprint };
 
-/**
- * Owns every field for both the create and edit forms. Editing a sprint
- * only ever updates success_measures/critical_path/out_of_scope — name,
- * dates, and theme are create-only, per the original's isEdit branch in
- * the submit payload. Preserved exactly; not something to "fix" without
- * knowing whether that's an intentional immutability rule.
- */
+/** Editing only touches success measures, critical path and out-of-scope; name, dates and theme are create-only. */
 export function useSprintForm(config: SprintFormConfig, onDone: () => void) {
   const isEdit = config.mode === "edit";
   const existing = isEdit ? config.sprint : undefined;
 
   const [name, setName] = useState(existing?.name ?? "");
   const [theme, setTheme] = useState(existing?.theme ?? "");
-  const [startDate, setStartDate] = useState(existing?.start_date?.slice(0, 10) ?? new Date().toISOString().slice(0, 10));
+  const [startDate, setStartDate] = useState(existing?.start_date?.slice(0, 10) ?? localISODate());
   const [workingDays, setWorkingDays] = useState(existing?.working_days ?? 10);
   const [successMeasures, setSuccessMeasures] = useState(existing?.success_measures.join("\n") ?? "");
   const [criticalPath, setCriticalPath] = useState(existing?.critical_path.join("\n") ?? "");
@@ -28,6 +24,7 @@ export function useSprintForm(config: SprintFormConfig, onDone: () => void) {
   const [busy, setBusy] = useState(false);
 
   async function submit() {
+    if (busy) return;
     setBusy(true);
     try {
       if (isEdit && existing) {
@@ -38,8 +35,8 @@ export function useSprintForm(config: SprintFormConfig, onDone: () => void) {
         });
       } else {
         const createPayload: Parameters<typeof api.sprints.create>[0] = {
-          name,
-          theme: theme || undefined,
+          name: name.trim(),
+          theme: theme.trim() || undefined,
           start_date: startDate,
           working_days: workingDays,
           success_measures: splitLines(successMeasures),
@@ -48,7 +45,10 @@ export function useSprintForm(config: SprintFormConfig, onDone: () => void) {
         };
         await api.sprints.create(createPayload);
       }
+      notify.success(isEdit ? "Sprint updated." : `${name.trim()} created.`);
       onDone();
+    } catch (err) {
+      notify.error(err, "Couldn't save the sprint.");
     } finally {
       setBusy(false);
     }

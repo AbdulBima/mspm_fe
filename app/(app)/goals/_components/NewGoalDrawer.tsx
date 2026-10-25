@@ -21,14 +21,14 @@ export function NewGoalDrawer({ sprintId, onClose, onDone }: NewGoalDrawerProps)
         <>
           <button
             onClick={onClose}
-            className="flex-1 rounded-lg border border-[#E7E5E2] py-2.5 text-sm font-medium text-[#54525C] transition-colors hover:bg-[#FAFAF9]"
+            className="btn-secondary flex-1"
           >
             Cancel
           </button>
           <button
             onClick={submit}
             disabled={busy || !title.trim()}
-            className="flex-1 rounded-lg bg-[#0B0C0F] py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#1D2B64] disabled:opacity-40"
+            className="btn-primary flex-1"
           >
             {busy ? "Adding…" : "Add goal"}
           </button>

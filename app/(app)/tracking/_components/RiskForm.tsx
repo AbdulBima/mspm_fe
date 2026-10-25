@@ -18,7 +18,8 @@ export function RiskForm({ sprintId, members, onDone }: RiskFormProps) {
 
   return (
     <Drawer
-      title="Log Risk / Blocker"
+      eyebrow="Tracking"
+      title="Log risk or blocker"
       onClose={onDone}
       footer={
         <>
@@ -36,7 +37,7 @@ export function RiskForm({ sprintId, members, onDone }: RiskFormProps) {
         <input value={title} onChange={(e) => setTitle(e.target.value)} required className={inputCls} />
       </div>
       <TextArea label="Description" value={description} onChange={setDescription} />
-      <div className="flex flex-wrap gap-3">
+      <div className="grid gap-3 sm:grid-cols-2">
         <Select label="Kind" value={kind} onChange={(v) => setKind(v as RiskKind)}>
           <option value="risk">Risk</option>
           <option value="blocker">Blocker</option>

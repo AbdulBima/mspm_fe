@@ -10,19 +10,19 @@ interface TaskTableProps {
 
 export function TaskTable({ tasks, goalById, onChanged, onEdit }: TaskTableProps) {
   return (
-    <div className="overflow-hidden rounded-xl border border-[#E7E5E2] bg-white">
+    <div className="card overflow-hidden">
       <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse">
+        <table className="w-full min-w-[640px] border-collapse text-left">
           <thead>
-            <tr className="border-b border-[#E7E5E2]">
-              <th className="px-5 py-3 text-xs font-medium text-[#84828C]">Task</th>
-              <th className="px-5 py-3 text-xs font-medium text-[#84828C]">Goal</th>
-              <th className="px-5 py-3 text-xs font-medium text-[#84828C] text-center w-16">Priority</th>
-              <th className="px-5 py-3 text-xs font-medium text-[#84828C] w-44">Status</th>
+            <tr className="border-b border-line">
+              <th className="px-5 py-3 text-[11px] font-semibold tracking-wide uppercase text-ink-mute">Task</th>
+              <th className="px-5 py-3 text-[11px] font-semibold tracking-wide uppercase text-ink-mute">Goal</th>
+              <th className="px-5 py-3 text-[11px] font-semibold tracking-wide uppercase text-ink-mute text-center w-16">Priority</th>
+              <th className="px-5 py-3 text-[11px] font-semibold tracking-wide uppercase text-ink-mute w-44">Status</th>
               <th className="px-5 py-3 w-16" />
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#EEEDEB]">
+          <tbody className="divide-y divide-line">
             {tasks.map((t) => (
               <TaskRow key={t.task_id} task={t} goal={t.goal_id ? goalById.get(t.goal_id) : undefined} onChanged={onChanged} onEdit={onEdit} />
             ))}

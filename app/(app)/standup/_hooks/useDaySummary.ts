@@ -1,11 +1,12 @@
 "use client";
 
+import { localISODate } from "@/lib/dates";
 import { useState } from "react";
 import { api } from "@/lib/api";
 import type { StandupDaySummaryResponse } from "@/lib/types";
 
 export function useDaySummary(sprintId: string) {
-  const [day, setDay] = useState(() => new Date().toISOString().slice(0, 10));
+  const [day, setDay] = useState(() => localISODate());
   const [result, setResult] = useState<StandupDaySummaryResponse | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);

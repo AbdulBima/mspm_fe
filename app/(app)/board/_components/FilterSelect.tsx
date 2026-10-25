@@ -12,18 +12,18 @@ interface FilterSelectProps {
 export function FilterSelect({ icon: Icon, value, onChange, placeholder, options }: FilterSelectProps) {
   const active = value !== "";
   return (
-    <div className="group relative flex items-center first:rounded-l-lg last:rounded-r-lg">
+    <div className="group relative flex min-w-0 items-center">
       <Icon
         size={13}
         className={`pointer-events-none absolute left-3 transition-colors ${
-          active ? "text-[#1D2B64]" : "text-[#84828C] group-focus-within:text-[#1D2B64]"
+          active ? "text-accent" : "text-ink-mute group-focus-within:text-accent"
         }`}
       />
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className={`appearance-none bg-transparent py-2.5 pl-8 pr-8 text-xs font-medium outline-none transition-colors first:rounded-l-lg last:rounded-r-lg hover:bg-[#F3F2EF] focus:bg-[#F3F2EF] ${
-          active ? "text-[#0B0C0F]" : "text-[#54525C]"
+        className={`w-full appearance-none truncate bg-transparent py-2.5 pr-8 pl-8 text-xs font-semibold outline-none transition-colors hover:bg-subtle focus:bg-subtle sm:max-w-[13rem] ${
+          active ? "text-ink" : "text-ink-soft"
         }`}
       >
         <option value="">{placeholder}</option>
@@ -38,12 +38,12 @@ export function FilterSelect({ icon: Icon, value, onChange, placeholder, options
           type="button"
           onClick={() => onChange("")}
           aria-label={`Clear ${placeholder.toLowerCase()}`}
-          className="absolute right-2 flex h-4 w-4 items-center justify-center rounded text-[#84828C] transition-colors hover:bg-[#EEEDEB] hover:text-[#54525C]"
+          className="absolute right-2 flex h-4 w-4 items-center justify-center rounded text-ink-mute transition-colors hover:bg-line hover:text-ink-soft"
         >
           <X size={11} />
         </button>
       ) : (
-        <ChevronDown size={12} className="pointer-events-none absolute right-2.5 text-[#84828C]" />
+        <ChevronDown size={12} className="pointer-events-none absolute right-2.5 text-ink-mute" />
       )}
     </div>
   );

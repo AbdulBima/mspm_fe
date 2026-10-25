@@ -7,14 +7,22 @@ import type {
   AttendanceDay,
   AttendanceStats,
   AttendanceStatus,
+  AuthSession,
   BurndownPoint,
   Checkin,
+  DailyReport,
+  DailyReportInput,
   Decision,
   Goal,
   Handover,
   Manager,
   Meeting,
   Member,
+  MemberAccess,
+  MyDailyReport,
+  MyProfile,
+  MyReportHistory,
+  MyTask,
   Report,
   Risk,
   Sprint,
@@ -23,6 +31,7 @@ import type {
   Task,
   TaskNote,
   TaskNoteWithContext,
+  TeamDailyReports,
 } from "./types";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
@@ -42,6 +51,10 @@ export function setToken(token: string) {
 export function clearToken() {
   window.localStorage.removeItem(TOKEN_KEY);
 }
+
+export const SESSION_EXPIRED_EVENT = "sprint-ops:session-expired";
+
+const AUTH_PATHS = ["/api/pm/auth/login", "/api/pm/auth/signup", "/api/pm/auth/activate", "/api/pm/auth/me"];
 
 export interface ApiFieldError {
   loc: (string | number)[];
@@ -119,12 +132,25 @@ http.interceptors.response.use(
   (error: unknown) => {
     if (axios.isAxiosError(error)) {
       if (error.response) {
+        const requestPath = error.config?.url ?? "";
+        if (
+          error.response.status === 401 &&
+          typeof window !== "undefined" &&
+          getToken() &&
+          !AUTH_PATHS.some((path) => requestPath.startsWith(path))
+        ) {
+          clearToken();
+          window.dispatchEvent(new Event(SESSION_EXPIRED_EVENT));
+        }
         const { message, fieldErrors } = parseErrorBody(error.response.data);
         throw new ApiError(error.response.status, message || error.message || "Request failed", {
           data: error.response.data,
           fieldErrors,
           cause: error,
         });
+      }
+      if (error.code === "ECONNABORTED") {
+        throw new ApiError(0, "The server took too long to respond. Try again.", { cause: error });
       }
       if (error.request) {
         throw new ApiError(0, "Couldn't reach the server. Check your connection and try again.", { cause: error });
@@ -140,6 +166,7 @@ http.interceptors.response.use(
 const get = <T>(path: string) => http.get<T>(path).then((r) => r.data);
 const post = <T>(path: string, data?: unknown) => http.post<T>(path, data).then((r) => r.data);
 const patch = <T>(path: string, data?: unknown) => http.patch<T>(path, data).then((r) => r.data);
+const put = <T>(path: string, data?: unknown) => http.put<T>(path, data).then((r) => r.data);
 const del = <T>(path: string) => http.delete<T>(path).then((r) => r.data);
 
 function cleanParams(params: Record<string, string | undefined>): URLSearchParams {
@@ -156,11 +183,13 @@ export const api = {
   ApiError,
 
   auth: {
-    login: (email: string, password: string) =>
-      post<{ token: string; manager: Manager }>("/api/pm/auth/login", { email, password }),
+    login: (email: string, password: string) => post<AuthSession>("/api/pm/auth/login", { email, password }),
     signup: (name: string, email: string, password: string, invite_code?: string) =>
-      post<{ token: string; manager: Manager }>("/api/pm/auth/signup", { name, email, password, invite_code }),
-    me: () => get<Manager>("/api/pm/auth/me"),
+      post<AuthSession>("/api/pm/auth/signup", { name, email, password, invite_code }),
+    activate: (email: string, access_code: string, password: string) =>
+      post<AuthSession>("/api/pm/auth/activate", { email, access_code, password }),
+    me: () => get<(Manager | MyProfile) & { role: AuthSession["role"] }>("/api/pm/auth/me"),
+    setupStatus: () => get<{ has_manager: boolean; invite_required: boolean }>("/api/pm/auth/setup-status"),
   },
 
   sprints: {
@@ -199,6 +228,8 @@ export const api = {
       get<{ member: Member; tasks: Task[]; recent_checkins: Checkin[] }>(
         `/api/pm/members/${memberId}/dashboard?sprint_id=${sprintId}`
       ),
+    issueAccess: (memberId: string) => post<MemberAccess>(`/api/pm/members/${memberId}/access`),
+    revokeAccess: (memberId: string) => del<void>(`/api/pm/members/${memberId}/access`),
     downloadOpenTasksPdf: (memberId: string, sprintId: string) =>
       http
         .get(`/api/pm/members/${memberId}/open-tasks-pdf?sprint_id=${sprintId}`, { responseType: "blob" })
@@ -312,6 +343,24 @@ export const api = {
       notes?: string;
     }) => post<Report>("/api/pm/reports/generate", data),
     remove: (id: string) => del<void>(`/api/pm/reports/${id}`),
+  },
+
+  dailyReports: {
+    forDay: (reportDate?: string) => {
+      const params = cleanParams({ report_date: reportDate });
+      const qs = params.toString();
+      return get<TeamDailyReports>(`/api/pm/daily-reports${qs ? `?${qs}` : ""}`);
+    },
+    forMember: (memberId: string, days = 14) =>
+      get<DailyReport[]>(`/api/pm/daily-reports/members/${memberId}?days=${days}`),
+  },
+
+  me: {
+    profile: () => get<MyProfile>("/api/pm/me"),
+    tasks: () => get<MyTask[]>("/api/pm/me/tasks"),
+    todaysReport: () => get<MyDailyReport>("/api/pm/me/daily-report"),
+    submitReport: (data: DailyReportInput) => put<MyDailyReport>("/api/pm/me/daily-report", data),
+    history: (days = 14) => get<MyReportHistory>(`/api/pm/me/daily-reports?days=${days}`),
   },
 
   ai: {

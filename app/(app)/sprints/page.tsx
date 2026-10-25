@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { HandoverPanel } from "@/components/HandoverPanel";
 import { useSprint } from "@/lib/sprint-context";
 import type { Sprint } from "@/lib/types";
@@ -18,9 +19,10 @@ export default function SprintsPage() {
   const [editing, setEditing] = useState<Sprint | null>(null);
   const [handoverFor, setHandoverFor] = useState<Sprint | null>(null);
   const { setStatus, remove } = useSprintActions(refresh);
+  const router = useRouter();
 
   return (
-    <div className="max-w-5xl mx-auto space-y-6 p-4 md:p-6">
+    <div className="mx-auto max-w-5xl space-y-6">
       <SprintsHeader onNewSprint={() => setShowForm(true)} />
 
       {showForm && (
@@ -62,7 +64,10 @@ export default function SprintsPage() {
           sprints={sprints}
           activeSprintId={sprint?.sprint_id}
           onStatusChange={setStatus}
-          onView={selectSprint}
+          onView={(id) => {
+            selectSprint(id);
+            router.push("/");
+          }}
           onHandover={setHandoverFor}
           onEdit={setEditing}
           onDelete={remove}

@@ -4,9 +4,11 @@ interface PaginationControlsProps {
   page: number;
   totalPages: number;
   onPageChange: (page: number) => void;
-  /** The two current callers differ only in outer spacing (pt-1 vs mt-3) — absorbed here rather than forking the component over one class. */
   className?: string;
 }
+
+const BTN =
+  "inline-flex items-center gap-1 rounded-xl border border-line-strong bg-white px-3.5 py-2 text-xs font-semibold text-ink-soft transition-colors hover:border-accent/40 hover:text-accent disabled:cursor-not-allowed disabled:opacity-40";
 
 export function PaginationControls({
   page,
@@ -16,22 +18,14 @@ export function PaginationControls({
 }: PaginationControlsProps) {
   return (
     <div className={className}>
-      <p className="text-xs text-[#84828C]">
+      <p className="text-xs font-medium text-ink-mute">
         Page {page} of {totalPages}
       </p>
       <div className="flex items-center gap-2">
-        <button
-          onClick={() => onPageChange(Math.max(1, page - 1))}
-          disabled={page <= 1}
-          className="inline-flex items-center gap-1 rounded-full border border-[#E7E5E2] bg-white px-3.5 py-1.5 text-xs font-medium text-[#54525C] transition-colors hover:bg-[#FAFAF9] disabled:cursor-not-allowed disabled:opacity-40"
-        >
+        <button onClick={() => onPageChange(Math.max(1, page - 1))} disabled={page <= 1} className={BTN}>
           <ChevronLeft size={13} /> Prev
         </button>
-        <button
-          onClick={() => onPageChange(Math.min(totalPages, page + 1))}
-          disabled={page >= totalPages}
-          className="inline-flex items-center gap-1 rounded-full border border-[#E7E5E2] bg-white px-3.5 py-1.5 text-xs font-medium text-[#54525C] transition-colors hover:bg-[#FAFAF9] disabled:cursor-not-allowed disabled:opacity-40"
-        >
+        <button onClick={() => onPageChange(Math.min(totalPages, page + 1))} disabled={page >= totalPages} className={BTN}>
           Next <ChevronRight size={13} />
         </button>
       </div>

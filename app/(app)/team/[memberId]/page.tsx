@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, UserX } from "lucide-react";
 import { Drawer } from "@/components/Drawer";
 import { NewTaskForm } from "@/components/NewTaskForm";
 import { useBlobDownload } from "@/hooks/useBlobDownload";
@@ -12,7 +12,11 @@ import { paginate } from "@/lib/pagination";
 import { useSprint } from "@/lib/sprint-context";
 import type { Task, TaskStatus } from "@/lib/types";
 
+import { PageLoader } from "@/components/PageLoader";
+import { EmptyState } from "@/components/EmptyState";
+import { AccessPanel } from "./_components/AccessPanel";
 import { EditTaskForm } from "./_components/EditTaskForm";
+import { MemberReports } from "./_components/MemberReports";
 import { MemberHeader } from "./_components/MemberHeader";
 import { MemberStats } from "./_components/MemberStats";
 import { RecentCheckins } from "./_components/RecentCheckins";
@@ -25,8 +29,8 @@ import { computeMemberTaskStats } from "./_lib/stats";
 
 export default function MemberDetailPage() {
   const { memberId } = useParams<{ memberId: string }>();
-  const { sprint } = useSprint();
-  const { member, tasks, checkins, goals, loading, reload } = useMemberDashboard(memberId, sprint?.sprint_id);
+  const { sprint, loading: sprintLoading } = useSprint();
+  const { member, tasks, checkins, goals, loading, error, reload } = useMemberDashboard(memberId, sprint?.sprint_id);
   const { downloading: downloadingPdf, download } = useBlobDownload();
 
   const [showNewTask, setShowNewTask] = useState(false);
@@ -55,18 +59,50 @@ export default function MemberDetailPage() {
     );
   }
 
-  if (!sprint || loading || !member) {
+  if (!sprintLoading && !sprint) {
     return (
-      <div className="flex h-64 flex-col items-center justify-center gap-3">
-        <div className="h-4 w-4 animate-spin rounded-full border-2 border-[#E7E5E2] border-t-[#1D2B64]" />
-        <p className="text-xs text-[#84828C]">Loading</p>
+      <div className="space-y-6">
+        <Link href="/team" className="inline-flex items-center gap-1 text-xs font-semibold text-ink-mute transition-colors hover:text-accent">
+          <ChevronLeft size={14} /> Back to team
+        </Link>
+        <EmptyState
+          icon={UserX}
+          title="No sprint yet"
+          description="Create a sprint to assign and track this member's tasks."
+          action={
+            <Link href="/sprints" className="btn-primary">
+              Go to sprints
+            </Link>
+          }
+        />
+        <div className="grid gap-6 lg:grid-cols-2">
+          <AccessPanel memberId={memberId} />
+          <MemberReports memberId={memberId} />
+        </div>
       </div>
     );
   }
 
+  if (error && !member) {
+    return (
+      <EmptyState
+        icon={UserX}
+        title="Couldn't open this member"
+        description={error}
+        action={
+          <Link href="/team" className="btn-secondary">
+            Back to team
+          </Link>
+        }
+      />
+    );
+  }
+
+  if (!sprint || loading || !member) return <PageLoader label="Loading team member" />;
+
   return (
-    <div className="max-w-7xl mx-auto space-y-6 p-6 md:p-8">
-      <Link href="/team" className="inline-flex items-center gap-1 text-xs text-[#84828C] transition-colors hover:text-[#0B0C0F]">
+    <div className="space-y-6">
+      <Link href="/team" className="inline-flex items-center gap-1 text-xs font-semibold text-ink-mute transition-colors hover:text-accent">
         <ChevronLeft size={14} /> Back to team
       </Link>
 
@@ -76,7 +112,8 @@ export default function MemberDetailPage() {
 
       {(showNewTask || editingTask) && (
         <Drawer
-          title={editingTask ? "Edit Task" : "New Task"}
+          eyebrow={member.name}
+          title={editingTask ? "Edit task" : "New task"}
           maxWidthCls="max-w-xl"
           onClose={() => {
             setShowNewTask(false);
@@ -106,9 +143,9 @@ export default function MemberDetailPage() {
         </Drawer>
       )}
 
-      <RecentCheckins checkins={checkins} />
-
-      <TasksSection
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
+        <div className="min-w-0 space-y-6">
+          <TasksSection
         filteredTasks={filteredTasks}
         totalTaskCount={tasks.length}
         statusFilter={statusFilter}
@@ -120,7 +157,14 @@ export default function MemberDetailPage() {
         onPageChange={setPage}
         onChanged={reload}
         onEdit={setEditingTask}
-      />
+          />
+          <RecentCheckins checkins={checkins} />
+        </div>
+        <div className="space-y-6">
+          <AccessPanel memberId={member.member_id} />
+          <MemberReports memberId={member.member_id} />
+        </div>
+      </div>
     </div>
   );
 }

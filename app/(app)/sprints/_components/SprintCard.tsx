@@ -1,4 +1,4 @@
-import { Trash2 } from "lucide-react";
+import { ArrowUpRight, CalendarDays, CheckCircle2, PencilLine, Repeat2, Trash2 } from "lucide-react";
 import { formatDate } from "@/lib/sprint-utils";
 import type { Sprint, SprintStatus } from "@/lib/types";
 import { STATUS_LABEL, STATUS_TONE } from "../_lib/constants";
@@ -13,60 +13,54 @@ interface SprintCardProps {
   onDelete: () => void;
 }
 
+const ACTION =
+  "inline-flex items-center gap-1.5 rounded-xl border border-line px-3 py-2 text-xs font-semibold text-ink-soft transition-colors hover:border-accent/40 hover:text-accent";
+
 export function SprintCard({ sprint: s, isActive, onStatusChange, onView, onHandover, onEdit, onDelete }: SprintCardProps) {
   const tone = STATUS_TONE[s.status];
+
   return (
-    <div
-      className={`rounded-3xl border bg-white p-6 shadow-sm transition-all duration-200 hover:shadow-md ${
-        isActive ? "border-amber-300 ring-1 ring-amber-100" : "border-zinc-100 hover:border-zinc-200"
-      }`}
-    >
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <div className="flex items-center gap-2">
-            <h3 className="font-display text-base font-semibold text-zinc-900">{s.name}</h3>
-            <span className={`inline-flex items-center gap-1.5 questrial-regular text-[10px] uppercase tracking-wide ${tone.text}`}>
+    <div className={`card p-5 transition-all duration-200 hover:shadow-pop sm:p-6 ${isActive ? "ring-2 ring-accent/25" : ""}`}>
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-2">
+            <h3 className="text-lg font-bold text-ink">{s.name}</h3>
+            <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${tone.pill}`}>
               <span className={`h-1.5 w-1.5 rounded-full ${tone.dot}`} />
               {STATUS_LABEL[s.status]}
             </span>
+            {isActive && <span className="rounded-full bg-gold-soft px-2.5 py-0.5 text-[11px] font-semibold text-[#A65F00]">Viewing</span>}
           </div>
-          {s.theme && <p className="mt-1 max-w-xl text-sm text-zinc-600">{s.theme}</p>}
-          <p className="mt-1.5 questrial-regular text-[11px] text-zinc-400">
-            Starts {formatDate(s.start_date)} · {s.working_days} working days
+          {s.theme && <p className="mt-1.5 max-w-xl text-sm text-ink-soft">{s.theme}</p>}
+          <p className="mt-2 inline-flex items-center gap-1.5 text-xs text-ink-mute">
+            <CalendarDays size={13} /> Starts {formatDate(s.start_date)} · {s.working_days} working days
           </p>
         </div>
-        <div className="flex items-center gap-2">
+
+        <div className="flex flex-wrap items-center gap-2">
           <select
             value={s.status}
             onChange={(e) => onStatusChange(e.target.value as SprintStatus)}
-            className="rounded-lg border border-zinc-200 bg-white px-2.5 py-1.5 text-xs text-zinc-700 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500/15"
+            aria-label="Sprint status"
+            className="rounded-xl border border-line-strong bg-white px-3 py-2 text-xs font-semibold text-ink-soft transition-colors focus:ring-4 focus:ring-accent/10 focus:outline-none"
           >
             <option value="planning">Planning</option>
             <option value="active">Active</option>
             <option value="completed">Completed</option>
           </select>
-          <button
-            onClick={onView}
-            className="rounded-lg border border-zinc-200 px-3 py-1.5 text-xs text-zinc-600 transition-colors hover:border-zinc-300 hover:text-zinc-900"
-          >
-            View
+          <button onClick={onView} className={ACTION}>
+            <ArrowUpRight size={14} /> View
           </button>
-          <button
-            onClick={onHandover}
-            className="rounded-lg border border-zinc-200 px-3 py-1.5 text-xs text-zinc-600 transition-colors hover:border-zinc-300 hover:text-zinc-900"
-          >
-            Handover
+          <button onClick={onHandover} className={ACTION}>
+            <Repeat2 size={14} /> Handover
           </button>
-          <button
-            onClick={onEdit}
-            className="rounded-lg border border-zinc-200 px-3 py-1.5 text-xs text-zinc-600 transition-colors hover:border-zinc-300 hover:text-zinc-900"
-          >
-            Edit
+          <button onClick={onEdit} className={ACTION}>
+            <PencilLine size={14} /> Edit
           </button>
           <button
             onClick={onDelete}
             aria-label="Delete sprint"
-            className="rounded-lg border border-zinc-200 p-2 text-zinc-400 transition-colors hover:border-rose-200 hover:text-rose-600"
+            className="flex h-[34px] w-[34px] items-center justify-center rounded-xl border border-line text-ink-mute transition-colors hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600"
           >
             <Trash2 size={14} />
           </button>
@@ -74,12 +68,12 @@ export function SprintCard({ sprint: s, isActive, onStatusChange, onView, onHand
       </div>
 
       {s.success_measures.length > 0 && (
-        <div className="mt-4 border-t border-zinc-100 pt-4">
-          <p className="mb-1.5 questrial-regular text-[9px] uppercase tracking-widest text-zinc-400">Success measures</p>
-          <ul className="space-y-1">
+        <div className="mt-5 border-t border-line pt-4">
+          <p className="mb-2 text-[11px] font-semibold tracking-wide text-ink-mute uppercase">Success measures</p>
+          <ul className="grid gap-1.5 sm:grid-cols-2">
             {s.success_measures.map((m, i) => (
-              <li key={i} className="flex items-start gap-1.5 text-sm text-zinc-600">
-                <span className="mt-0.5 text-emerald-600">✓</span> {m}
+              <li key={i} className="flex items-start gap-2 text-sm text-ink-soft">
+                <CheckCircle2 size={15} className="mt-0.5 shrink-0 text-emerald-500" /> {m}
               </li>
             ))}
           </ul>

@@ -28,18 +28,18 @@ export function DecisionsTab({ sprintId }: { sprintId: string }) {
 
       <TableShell>
         <thead>
-          <tr className="border-b border-[#E7E5E2] bg-[#F3F2EF]">
+          <tr className="border-b border-line bg-subtle">
             <th className={thCls}>Decision</th>
             <th className={`${thCls} w-40`}>Made by</th>
             <th className={`${thCls} w-32`}>Date</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-[#EEEDEB]">
+        <tbody className="divide-y divide-line">
           {decisions.map((d) => (
-            <tr key={d.decision_id} className="transition-colors hover:bg-[#FAFAF9]">
-              <td className="px-5 py-3.5 text-sm font-medium text-[#0B0C0F]">{d.decision}</td>
-              <td className="px-5 py-3.5 text-[13px] text-[#54525C]">{d.made_by}</td>
-              <td className="px-5 py-3.5 text-[13px] text-[#84828C]">{formatDate(d.decided_on)}</td>
+            <tr key={d.decision_id} className="transition-colors hover:bg-subtle">
+              <td className="px-5 py-3.5 text-sm font-medium text-ink">{d.decision}</td>
+              <td className="px-5 py-3.5 text-[13px] text-ink-soft">{d.made_by}</td>
+              <td className="px-5 py-3.5 text-[13px] text-ink-mute">{formatDate(d.decided_on)}</td>
             </tr>
           ))}
           {decisions.length === 0 && <EmptyRow colSpan={3} message="No decisions logged yet." />}
