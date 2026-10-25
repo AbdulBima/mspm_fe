@@ -1,6 +1,4 @@
+export const AI_GRADIENT = "linear-gradient(135deg, #6F01D0, #1F0954)";
+export const AI_GRADIENT_SHADOW = "0 4px 14px -4px rgba(111,1,208,0.55)";
 
-export const AI_GRADIENT = "linear-gradient(135deg, #1D2B64, #35479E)";
-export const AI_GRADIENT_SHADOW = "0 2px 8px -2px rgba(29,43,100,0.5)";
-
-
-export const DARK_GRADIENT = "linear-gradient(180deg, #16171B, #0B0C0F)";
+export const DARK_GRADIENT = "linear-gradient(180deg, #2B1172, #1F0954)";

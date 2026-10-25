@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 
@@ -9,22 +9,10 @@ interface DrawerProps {
   eyebrow?: string;
   onClose: () => void;
   children: ReactNode;
-  /** Optional pinned footer (e.g. Cancel/Submit) that stays outside the scrollable content area. */
   footer?: ReactNode;
   maxWidthCls?: string;
 }
 
-/**
- * Right-side slide-over: backdrop, header with a close button, scrollable
- * content, and an optional pinned footer. Portals to document.body so it
- * escapes any parent's overflow/stacking context.
- *
- * This is one component doing the job two near-identical ones used to do:
- * the goals page's "add goal" drawer and the notes page's "add note"
- * drawer were both hand-rolled portal + backdrop + header markup, differing
- * only in width and whether the action buttons were pinned below the
- * scroll area. Both now use this, with `footer` covering the difference.
- */
 export function Drawer({
   title,
   eyebrow = "Sprint workspace",
@@ -33,26 +21,47 @@ export function Drawer({
   footer,
   maxWidthCls = "max-w-md",
 }: DrawerProps) {
+  useEffect(() => {
+    const original = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = original;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [onClose]);
+
   return createPortal(
     <>
-      <div className="fixed inset-0 z-40 bg-[#0B0C0F]/25 backdrop-blur-[2px]" onClick={onClose} />
-      <div className={`fixed right-0 top-0 bottom-0 z-50 flex w-full ${maxWidthCls} flex-col overflow-hidden bg-white shadow-2xl`}>
-        <div className="flex shrink-0 items-center justify-between border-b border-[#E7E5E2] px-6 py-5">
-          <div>
-            <p className="mb-1 text-xs font-medium text-[#1D2B64]">{eyebrow}</p>
-            <h2 className="text-base font-semibold text-[#0B0C0F]">{title}</h2>
+      <div className="fixed inset-0 z-40 animate-fade-in bg-brand/30 backdrop-blur-sm" onClick={onClose} />
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label={title}
+        className={`fixed inset-y-0 right-0 z-50 flex w-full ${maxWidthCls} animate-slide-in-right flex-col overflow-hidden bg-white shadow-pop sm:rounded-l-3xl`}
+      >
+        <div className="flex shrink-0 items-center justify-between gap-4 border-b border-line px-5 py-5 sm:px-6">
+          <div className="min-w-0">
+            <p className="eyebrow">{eyebrow}</p>
+            <h2 className="mt-1 truncate text-lg font-bold text-ink">{title}</h2>
           </div>
           <button
             onClick={onClose}
-            className="flex h-8 w-8 items-center justify-center rounded-lg text-[#84828C] transition-colors hover:bg-[#FAFAF9]"
+            aria-label="Close"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-ink-mute transition-colors hover:bg-subtle hover:text-ink"
           >
-            <X size={15} />
+            <X size={17} />
           </button>
         </div>
 
-        <div className="flex-1 space-y-5 overflow-y-auto p-6">{children}</div>
+        <div className="flex-1 space-y-5 overflow-y-auto p-5 sm:p-6">{children}</div>
 
-        {footer && <div className="flex shrink-0 gap-3 border-t border-[#E7E5E2] px-6 py-5">{footer}</div>}
+        {footer && (
+          <div className="flex shrink-0 gap-3 border-t border-line bg-white px-5 py-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:px-6">
+            {footer}
+          </div>
+        )}
       </div>
     </>,
     document.body

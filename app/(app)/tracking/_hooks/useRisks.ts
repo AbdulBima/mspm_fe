@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { api } from "@/lib/api";
+import { notify } from "@/lib/notify";
 import type { Member, Risk } from "@/lib/types";
 
 export function useRisks(sprintId: string) {
@@ -9,9 +10,13 @@ export function useRisks(sprintId: string) {
   const [members, setMembers] = useState<Member[]>([]);
 
   const reload = useCallback(async () => {
-    const [r, m] = await Promise.all([api.risks.list(sprintId), api.members.list()]);
-    setRisks(r);
-    setMembers(m);
+    try {
+      const [r, m] = await Promise.all([api.risks.list(sprintId), api.members.list()]);
+      setRisks(r);
+      setMembers(m);
+    } catch (err) {
+      notify.error(err, "Couldn't load risks.");
+    }
   }, [sprintId]);
 
   useEffect(() => {
@@ -25,8 +30,12 @@ export function useRisks(sprintId: string) {
   }, [reload]);
 
   async function setStatus(riskId: string, status: Risk["status"]) {
-    await api.risks.update(riskId, { status });
-    reload();
+    try {
+      await api.risks.update(riskId, { status });
+      await reload();
+    } catch (err) {
+      notify.error(err, "Couldn't update the risk.");
+    }
   }
 
   return { risks, members, reload, setStatus };

@@ -15,12 +15,12 @@ interface CommitmentLogSectionProps {
 export function CommitmentLogSection({ filteredCount, pagedEntries, page, totalPages, onPageChange }: CommitmentLogSectionProps) {
   return (
     <div>
-      <h2 className="mb-3 text-xs font-medium text-[#84828C]">Commitment log · {filteredCount}</h2>
+      <h2 className="mb-3 text-sm font-bold text-ink">Commitment log · {filteredCount}</h2>
       {filteredCount === 0 ? (
-        <div className={`rounded-2xl border border-dashed border-[#E7E5E2] bg-white p-8 text-center ${CARD_SHADOW}`}>
-          <CalendarCheck size={26} className="mx-auto mb-3 text-[#D4D2CC]" strokeWidth={1.5} />
-          <p className="text-sm font-medium text-[#0B0C0F]">No commitments logged yet</p>
-          <p className="mt-1 text-xs text-[#84828C]">Log the first standup commitment to start tracking follow-through.</p>
+        <div className={`rounded-2xl border border-dashed border-line-strong bg-white p-8 text-center ${CARD_SHADOW}`}>
+          <CalendarCheck size={26} className="mx-auto mb-3 text-line-strong" strokeWidth={1.5} />
+          <p className="text-sm font-bold text-ink">No commitments logged yet</p>
+          <p className="mt-1 text-xs text-ink-mute">Log the first standup commitment to start tracking follow-through.</p>
         </div>
       ) : (
         <>

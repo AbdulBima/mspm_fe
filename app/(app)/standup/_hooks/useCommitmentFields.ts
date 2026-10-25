@@ -2,14 +2,9 @@
 
 import { useState } from "react";
 import { api } from "@/lib/api";
+import { notify } from "@/lib/notify";
 import type { AccountabilityEntry, CheckinFlag } from "@/lib/types";
 
-/**
- * Owns one member+date commitment's field state and submit flow. Seeded
- * from any existing commitment for that member/day (via `existing`) so
- * re-opening the form for the same day picks up what was already saved
- * instead of starting blank.
- */
 export function useCommitmentFields(
   sprintId: string,
   memberId: string,
@@ -29,7 +24,7 @@ export function useCommitmentFields(
   }
 
   async function submit() {
-    if (!memberId || !date) return;
+    if (busy || !memberId || !date) return;
     setBusy(true);
     try {
       await api.checkins.create({
@@ -40,7 +35,10 @@ export function useCommitmentFields(
         today_plan: todayPlan.trim() || null,
         flag,
       });
+      notify.success("Commitment saved.");
       onDone();
+    } catch (err) {
+      notify.error(err, "Couldn't save the commitment.");
     } finally {
       setBusy(false);
     }

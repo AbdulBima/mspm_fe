@@ -11,22 +11,21 @@ interface TeamSummaryProps {
 
 export function TeamSummary({ total, blocked, stale, query, onQueryChange }: TeamSummaryProps) {
   return (
-    <>
-      <div className="flex flex-wrap gap-3">
+    <div className="space-y-4">
+      <div className="grid grid-cols-3 gap-3">
         <StatTile label="Active" value={total} tone="neutral" />
         <StatTile label="Blocked" value={blocked} tone="rose" />
         <StatTile label="Quiet" value={stale} tone="amber" />
       </div>
-
-      <div className="relative max-w-xs">
-        <Search size={15} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-zinc-300" />
+      <div className="relative sm:max-w-xs">
+        <Search size={15} className="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-ink-faint" />
         <input
           value={query}
           onChange={(e) => onQueryChange(e.target.value)}
           placeholder="Search by name or role"
-          className="w-full rounded-full border border-zinc-200 bg-white py-2.5 pl-10 pr-4 text-sm text-zinc-900 placeholder:text-zinc-300 transition-colors focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/15"
+          className="w-full rounded-xl border border-line-strong bg-white py-2.5 pr-4 pl-10 text-sm text-ink placeholder:text-ink-faint transition-all focus:border-accent focus:ring-4 focus:ring-accent/10 focus:outline-none"
         />
       </div>
-    </>
+    </div>
   );
 }

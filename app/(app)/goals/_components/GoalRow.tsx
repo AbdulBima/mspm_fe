@@ -17,22 +17,22 @@ interface GoalRowProps {
 export function GoalRow({ goal, index, contributors, isExpanded, onToggleExpand }: GoalRowProps) {
   return (
     <Fragment>
-      <tr onClick={onToggleExpand} className="cursor-pointer hover:bg-[#FAFAF9] transition-colors">
+      <tr onClick={onToggleExpand} className="cursor-pointer hover:bg-subtle transition-colors">
         <td className="px-5 py-4">
-          <span className="text-sm tabular-nums text-[#B4B2AC]">{String(index + 1).padStart(2, "0")}</span>
+          <span className="text-sm tabular-nums text-ink-faint">{String(index + 1).padStart(2, "0")}</span>
         </td>
         <td className="px-5 py-4">
           <div className="flex items-center gap-2">
             <ChevronDown
               size={13}
-              className={`shrink-0 text-[#B4B2AC] transition-transform ${isExpanded ? "rotate-180" : ""}`}
+              className={`shrink-0 text-ink-faint transition-transform ${isExpanded ? "rotate-180" : ""}`}
             />
-            <span className="text-sm font-medium text-[#0B0C0F]">{goal.title}</span>
+            <span className="text-sm font-semibold text-ink">{goal.title}</span>
           </div>
         </td>
 
         <td className="px-5 py-4 text-center">
-          <span className="text-sm tabular-nums text-[#54525C]">{goal.task_count}</span>
+          <span className="text-sm tabular-nums text-ink-soft">{goal.task_count}</span>
         </td>
 
         <td className="px-5 py-4">
@@ -45,10 +45,10 @@ export function GoalRow({ goal, index, contributors, isExpanded, onToggleExpand 
 
         <td className="px-5 py-4">
           <div className="flex flex-col items-end gap-1.5">
-            <span className="text-sm font-medium tabular-nums text-[#0B0C0F]">{goal.completion_pct}%</span>
-            <div className="h-1 w-32 overflow-hidden rounded-full bg-[#EEEDEB]">
+            <span className="text-sm font-medium tabular-nums text-ink">{goal.completion_pct}%</span>
+            <div className="h-1 w-32 overflow-hidden rounded-full bg-line">
               <div
-                className="h-full rounded-full bg-[#1D2B64] transition-all duration-500"
+                className="h-full rounded-full bg-linear-to-r from-accent to-brand transition-all duration-500"
                 style={{ width: `${goal.completion_pct}%` }}
               />
             </div>
@@ -57,7 +57,7 @@ export function GoalRow({ goal, index, contributors, isExpanded, onToggleExpand 
       </tr>
 
       {isExpanded && (
-        <tr className="bg-[#FAFAF9]">
+        <tr className="bg-subtle">
           <td />
           <td colSpan={5} className="px-5 pb-4">
             <ContributorList contributors={contributors} />

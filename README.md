@@ -1,16 +1,17 @@
-# Sprint Ops — Frontend
+# Mently Sprint Ops — Frontend
 
-Next.js frontend for Sprint Ops: sprint and goal tracking, task boards,
+Next.js frontend for Mently Sprint Ops: sprint and goal tracking, task boards,
 standup commitments, attendance, a risk/decision/meeting tracker, task
-notes, leadership reports, team management, and an AI assistant grounded
-in the current sprint's data. Talks to the companion FastAPI backend.
+notes, leadership reports, team management, member daily reports, and an AI
+assistant grounded in the current sprint's data. Talks to the companion
+FastAPI backend (`mspm_be`).
 
 ## Stack
 
 - Next.js App Router, React, TypeScript
-- Tailwind CSS
+- Tailwind CSS v4 with Mently design tokens (`app/globals.css`)
+- Montserrat via `next/font/google`
 - axios (via `lib/api.ts`) for the API client
-- framer-motion, used for one animated drawer
 - React Context for app-wide state (`lib/auth-context.tsx`,
   `lib/sprint-context.tsx`)
 
@@ -44,6 +45,11 @@ pure organization rather than routes.
 | `/team`           | `app/team/`            | Team roster grouped by discipline, with health rollups             |
 | `/team/:memberId` | `app/team/[memberId]/` | One member's task list, stats, and PDF export                      |
 | `/ai`             | `app/ai/`              | Chat assistant grounded in the active sprint's data                |
+| `/daily-reports`  | `app/(app)/daily-reports/` | Who filed their end-of-day report, what they said, who is missing |
+| `/me`             | `app/(member)/me/`     | Team member portal: file today's report before midnight, history   |
+| `/login`          | `app/login/`           | One sign-in for managers and team members                          |
+| `/activate`       | `app/activate/`        | Team member sets a password with their one-time access code        |
+| `/signup`         | `app/signup/`          | First manager account, or another manager with the invite code     |
 
 ## Shared modules
 
@@ -56,8 +62,6 @@ small utilities used across multiple features:
 - `types.ts` — domain types (`Sprint`, `Task`, `Member`, ...)
 - `sprint-context.tsx` / `auth-context.tsx` — app-wide React Context
 - `form-styles.ts` — shared form field styles (`inputCls`, `inputClsRounded`, `labelCls`)
-- `form-styles-zinc.ts` — field styles for the zinc/amber palette (see Design notes)
-- `card-styles.ts` — the elevated-card shadow token
 - `gradients.ts` — the AI-feature gradient and the dark-button gradient
 - `color.ts` — `hexToRgba()`
 - `pagination.ts` — shared page-slicing logic
@@ -68,15 +72,16 @@ small utilities used across multiple features:
 
 Shared presentational primitives:
 
-- `Drawer.tsx` — right-side slide-over shell (backdrop, header, scrollable
-  body, optional pinned footer)
+- `Drawer.tsx` — animated right-side slide-over (backdrop, header, scrollable
+  body, optional pinned footer, Escape to close)
 - `EmptyMark.tsx` — small "nothing here" icon, colored per page via a
   `borderColor` prop
-- `DotGridEmptyState.tsx` — empty-state shell for the zinc/amber pages
+- `DotGridEmptyState.tsx` — illustrated empty state (sprints, team)
 - `PaginationControls.tsx` — Prev/Next pagination controls
 - `AIAvatar.tsx` — gradient badge marking an AI-powered feature
 - `EmptyState.tsx`, `StatCard.tsx`, `StatusBadge.tsx`, `HandoverPanel.tsx`,
-  `NewTaskForm.tsx` — additional shared UI used across features
+  `NewTaskForm.tsx`, `CustomSelect.tsx`, `AccessCodeCard.tsx` — additional
+  shared UI used across features
 
 ### `hooks/`
 
@@ -100,28 +105,27 @@ Every feature follows the same shape:
 - Shared code lives in `lib/`, `components/`, or `hooks/` once more than
   one feature needs the same thing.
 
-## Design notes
+## Roles and daily reports
 
-Two visual languages currently coexist in this codebase:
+- **Managers** use everything under `app/(app)/`.
+- **Team members** sign in through the same `/login` and land on `/me`
+  (`app/(member)/`). A manager gives someone access from their Team page
+  (an email is required); that creates a one-time access code the member
+  uses on `/activate`. Issuing a new code doubles as a password reset.
+- A daily report covers one calendar day and can be filed or edited until
+  midnight in the team timezone (`TEAM_TIMEZONE` on the backend, default
+  `Africa/Lagos`). After that it is locked and the day shows as missed.
 
-- Most pages use a hex-token palette (`#0B0C0F` / `#1D2B64` / `#E7E5E2`,
-  sentence-case labels).
-- Sprints and Team use a zinc/amber Tailwind palette with
-  `font-display`/`questrial-regular` type and uppercase tracked labels.
+## Design system
 
-A few smaller stylistic splits also exist and are worth resolving in a
-future design pass:
-
-- Notes, Standup, and Ask AI use an elevated card style (`CARD_SHADOW`,
-  more rounded corners); the rest use flat bordered cards.
-- Notes and Standup each have their own dropdown component, built
-  differently (Tailwind hover states vs. JS-tracked hover state).
-- Avatar initials are two letters in most places, one letter in Goals and
-  Notes.
-- Drawers are static everywhere except the team page's add-member drawer,
-  which animates in with framer-motion.
-
-None of these affect functionality.
+Mently branding: indigo `brand` (#1F0954), purple `accent` (#6F01D0) and
+gold `gold` (#F19A0D), with cool neutrals (`ink`, `ink-soft`, `ink-mute`,
+`ink-faint`, `line`, `line-strong`, `canvas`, `subtle`). Tokens live in
+`@theme` in `app/globals.css`, alongside a few component classes:
+`card`, `eyebrow`, `btn-primary`, `btn-secondary` and `spinner`.
+Shared building blocks: `PageHeader`, `StatCard`, `EmptyState`,
+`NoActiveSprint`, `Drawer`, `PageLoader`, `SplashScreen` and the `Toaster`
+(trigger it with `notify` from `lib/notify.ts`).
 
 ## Running locally
 

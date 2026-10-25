@@ -38,11 +38,11 @@ export function CommitmentFields({ sprintId, memberId, date, tasks, entries, onD
       <div>
         <span className={labelCls}>Committing to</span>
         {memberTasks.length === 0 ? (
-          <p className="rounded-xl border border-dashed border-[#E7E5E2] px-3.5 py-3 text-xs text-[#84828C]">
+          <p className="rounded-xl border border-dashed border-line px-3.5 py-3 text-xs text-ink-mute">
             No open tasks for this person — add one from their task page first.
           </p>
         ) : (
-          <div className="max-h-56 divide-y divide-[#EEEDEB] overflow-y-auto rounded-xl border border-[#E7E5E2]">
+          <div className="max-h-56 divide-y divide-line overflow-y-auto rounded-xl border border-line-strong">
             {memberTasks.map((t) => {
               const checked = selectedTaskIds.includes(t.task_id);
               return (
@@ -51,13 +51,13 @@ export function CommitmentFields({ sprintId, memberId, date, tasks, entries, onD
                   type="button"
                   onClick={() => toggleTask(t.task_id)}
                   className="flex w-full items-center gap-3 px-3.5 py-2.5 text-left text-sm transition-colors"
-                  style={{ backgroundColor: checked ? "rgba(29,43,100,0.06)" : "#FFFFFF", color: "#0B0C0F" }}
+                  style={{ backgroundColor: checked ? "#F4EAFD" : "#FFFFFF", color: "#16122E" }}
                 >
                   <span
                     className="flex h-4 w-4 shrink-0 items-center justify-center rounded"
                     style={{
-                      border: `1.5px solid ${checked ? "#1D2B64" : "#D4D2CC"}`,
-                      backgroundColor: checked ? "#1D2B64" : "#FFFFFF",
+                      border: `1.5px solid ${checked ? "#6F01D0" : "#DCD8E8"}`,
+                      backgroundColor: checked ? "#6F01D0" : "#FFFFFF",
                     }}
                   >
                     {checked && <Check size={10} color="#FFFFFF" />}
@@ -81,11 +81,11 @@ export function CommitmentFields({ sprintId, memberId, date, tasks, entries, onD
                 key={f}
                 type="button"
                 onClick={() => setFlag(f)}
-                className="rounded-full border px-3.5 py-2 text-xs font-medium transition-all duration-150"
+                className="rounded-full border px-3.5 py-2 text-xs font-semibold transition-all duration-150"
                 style={
                   active
-                    ? { color: "#1D2B64", backgroundColor: "rgba(29,43,100,0.08)", borderColor: "rgba(29,43,100,0.3)" }
-                    : { color: "#84828C", backgroundColor: "#FFFFFF", borderColor: "#E7E5E2" }
+                    ? { color: "#6F01D0", backgroundColor: "#F4EAFD", borderColor: "rgba(111,1,208,0.35)" }
+                    : { color: "#75728A", backgroundColor: "#FFFFFF", borderColor: "#ECEAF3" }
                 }
               >
                 {CHECKIN_FLAG_LABEL[f]}
@@ -110,14 +110,14 @@ export function CommitmentFields({ sprintId, memberId, date, tasks, entries, onD
         <button
           type="button"
           onClick={onDone}
-          className="rounded-xl border border-[#E7E5E2] px-4 py-2.5 text-sm font-medium text-[#54525C] transition-colors hover:bg-[#FAFAF9]"
+          className="btn-secondary"
         >
           Cancel
         </button>
         <button
           type="submit"
           disabled={busy || !memberId}
-          className="rounded-xl bg-linear-to-b from-[#16171B] to-[#0B0C0F] px-5 py-2.5 text-sm font-medium text-white shadow-[0_1px_2px_rgba(11,12,15,0.08),0_8px_16px_-6px_rgba(11,12,15,0.4)] transition-all duration-200 hover:-translate-y-0.5 disabled:translate-y-0 disabled:opacity-40 disabled:shadow-none"
+          className="btn-primary"
         >
           {busy ? "Saving…" : "Save commitment"}
         </button>

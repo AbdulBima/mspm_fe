@@ -1,7 +1,10 @@
 "use client";
 
+import { RefreshCw } from "lucide-react";
 import { useSprint } from "@/lib/sprint-context";
 import { SprintClock } from "@/components/SprintClock";
+import { PageLoader } from "@/components/PageLoader";
+import { EmptyState } from "@/components/EmptyState";
 import { computeDayHealth } from "@/lib/sprint-utils";
 
 import { BurndownChart } from "./_components/BurndownChart";
@@ -16,33 +19,29 @@ import { useSprintDashboardData } from "./_hooks/useSprintDashboardData";
 export default function DashboardPage() {
   const { sprint, loading: sprintLoading } = useSprint();
 
-  if (!sprintLoading && !sprint) {
-    return <NoSprintState />;
-  }
+  if (!sprintLoading && !sprint) return <NoSprintState />;
+  if (sprintLoading || !sprint) return <PageLoader label="Loading sprint overview" />;
 
-  if (sprintLoading || !sprint) {
-    return (
-      <div className="flex h-64 flex-col items-center justify-center gap-3">
-        <div className="h-4 w-4 animate-spin rounded-full border-2 border-[#E7E5E2] border-t-[#1D2B64]" />
-        <p className="text-xs text-[#84828C]">Loading sprint telemetry</p>
-      </div>
-    );
-  }
-
-  // Keying on sprint_id remounts this on sprint change, so its loading state
-  // resets naturally instead of via a synchronous setState inside an effect.
   return <SprintDashboard key={sprint.sprint_id} sprint={sprint} />;
 }
 
 function SprintDashboard({ sprint }: { sprint: NonNullable<ReturnType<typeof useSprint>["sprint"]> }) {
-  const { health, alignment, burndown, checkins, loading } = useSprintDashboardData(sprint.sprint_id);
+  const { health, alignment, burndown, checkins, loading, error, reload } = useSprintDashboardData(sprint.sprint_id);
 
-  if (loading || !health) {
+  if (loading && !health) return <PageLoader label="Loading sprint overview" />;
+
+  if (error || !health) {
     return (
-      <div className="flex h-64 flex-col items-center justify-center gap-3">
-        <div className="h-4 w-4 animate-spin rounded-full border-2 border-[#E7E5E2] border-t-[#1D2B64]" />
-        <p className="text-xs text-[#84828C]">Loading sprint telemetry</p>
-      </div>
+      <EmptyState
+        icon={RefreshCw}
+        title="Couldn't load the overview"
+        description={error ?? undefined}
+        action={
+          <button onClick={() => void reload()} className="btn-secondary">
+            Try again
+          </button>
+        }
+      />
     );
   }
 
@@ -50,23 +49,19 @@ function SprintDashboard({ sprint }: { sprint: NonNullable<ReturnType<typeof use
   const alignmentScore = alignment?.alignment_score ?? 0;
 
   return (
-    <div className="space-y-6 max-w-400 mx-auto p-6 md:p-8 text-[#54525C]">
+    <div className="space-y-6">
       <SprintClock sprint={sprint} dayNumber={health.day_number} dayHealth={dayHealth} />
 
       <MetricsRow health={health} alignmentScore={alignmentScore} />
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
         <BurndownChart data={burndown} />
-        <div className="lg:col-span-1">
-          <NeedsAttention health={health} />
-        </div>
+        <NeedsAttention health={health} />
       </div>
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
         <PerPersonRollup perMember={health.per_member} />
-        <div className="lg:col-span-1">
-          <GoalBreakdown goals={alignment?.goals ?? []} />
-        </div>
+        <GoalBreakdown goals={alignment?.goals ?? []} />
       </div>
     </div>
   );

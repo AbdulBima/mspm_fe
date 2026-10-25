@@ -1,5 +1,7 @@
 "use client";
 
+import { localISODate } from "@/lib/dates";
+import { notify } from "@/lib/notify";
 import { useState } from "react";
 import { api } from "@/lib/api";
 import type { ActionItem, MeetingType } from "@/lib/types";
@@ -7,7 +9,7 @@ import type { CreateMeetingInput } from "../_lib/types";
 
 export function useCreateMeeting(sprintId: string, onDone: () => void) {
   const [meetingType, setMeetingType] = useState<MeetingType>("standup");
-  const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
+  const [date, setDate] = useState(localISODate());
   const [notes, setNotes] = useState("");
   const [actionItemsText, setActionItemsText] = useState("");
   const [busy, setBusy] = useState(false);
@@ -29,6 +31,8 @@ export function useCreateMeeting(sprintId: string, onDone: () => void) {
       } satisfies CreateMeetingInput;
       await api.meetings.create(payload);
       onDone();
+    } catch (err) {
+      notify.error(err);
     } finally {
       setBusy(false);
     }

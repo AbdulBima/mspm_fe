@@ -33,7 +33,7 @@ export function RisksTab({ sprintId }: { sprintId: string }) {
 
       <TableShell>
         <thead>
-          <tr className="border-b border-[#E7E5E2] bg-[#F3F2EF]">
+          <tr className="border-b border-line bg-subtle">
             <th className={thCls}>Title</th>
             <th className={`${thCls} w-24`}>Kind</th>
             <th className={`${thCls} w-28`}>Severity</th>
@@ -42,23 +42,23 @@ export function RisksTab({ sprintId }: { sprintId: string }) {
             <th className={`${thCls} w-36`}>Status</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-[#EEEDEB]">
+        <tbody className="divide-y divide-line">
           {risks.map((r) => (
-            <tr key={r.risk_id} className="transition-colors hover:bg-[#FAFAF9]">
-              <td className="px-5 py-3.5 text-sm font-medium text-[#0B0C0F]">{r.title}</td>
-              <td className="px-5 py-3.5 text-[13px] capitalize text-[#54525C]">{r.kind}</td>
+            <tr key={r.risk_id} className="transition-colors hover:bg-subtle">
+              <td className="px-5 py-3.5 text-sm font-medium text-ink">{r.title}</td>
+              <td className="px-5 py-3.5 text-[13px] capitalize text-ink-soft">{r.kind}</td>
               <td className="px-5 py-3.5">
                 <SeverityBadge severity={r.severity} />
               </td>
-              <td className="px-5 py-3.5 text-[13px] text-[#54525C]">{memberName(r.owner_member_id)}</td>
-              <td className="px-5 py-3.5 text-center text-[13px] tabular-nums text-[#84828C]">
+              <td className="px-5 py-3.5 text-[13px] text-ink-soft">{memberName(r.owner_member_id)}</td>
+              <td className="px-5 py-3.5 text-center text-[13px] tabular-nums text-ink-mute">
                 {r.status === "open" && r.days_open != null ? `${r.days_open}d` : "—"}
               </td>
               <td className="px-5 py-3.5">
                 <select
                   value={r.status}
                   onChange={(e) => setStatus(r.risk_id, e.target.value as Risk["status"])}
-                  className="rounded-lg border border-transparent bg-transparent py-1 pl-0 pr-1.5 text-[13px] font-medium text-[#54525C] outline-none transition-colors hover:border-[#E7E5E2] focus:border-[#1D2B64] focus:ring-2 focus:ring-[#1D2B64]/10"
+                  className="rounded-lg border border-transparent bg-transparent py-1 pl-0 pr-1.5 text-[13px] font-medium text-ink-soft outline-none transition-colors hover:border-line-strong focus:border-accent focus:ring-4 focus:ring-accent/10"
                 >
                   <option value="open">Open</option>
                   <option value="mitigated">Mitigated</option>

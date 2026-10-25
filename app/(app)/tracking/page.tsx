@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { PageLoader } from "@/components/PageLoader";
 import { useSprint } from "@/lib/sprint-context";
 
 import { CheckinsTab } from "./_components/CheckinsTab";
@@ -19,10 +20,7 @@ export default function TrackingPage() {
 
   if (sprintLoading) {
     return (
-      <div className="flex h-64 flex-col items-center justify-center gap-3">
-        <div className="h-4 w-4 animate-spin rounded-full border-2 border-[#E7E5E2] border-t-[#1D2B64]" />
-        <p className="text-xs text-[#84828C]">Loading</p>
-      </div>
+      <PageLoader label="Loading" />
     );
   }
 
@@ -31,7 +29,7 @@ export default function TrackingPage() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6 p-6 md:p-8">
+    <div className="space-y-6">
       <TrackingHeader />
 
       <TrackingTabBar tab={tab} onChange={setTab} />

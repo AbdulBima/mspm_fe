@@ -5,7 +5,7 @@ import type { Member, Task } from "@/lib/types";
 import { hexToRgba } from "@/lib/color";
 import { NOTE_TYPE_META, NOTE_TYPE_OPTIONS } from "../_lib/constants";
 import { useAddNote } from "../_hooks/useAddNote";
-import { CustomSelect } from "./CustomSelect";
+import { CustomSelect } from "@/components/CustomSelect";
 
 interface AddNoteFormProps {
   tasks: Task[];
@@ -58,11 +58,11 @@ export function AddNoteForm({ tasks, members, onDone }: AddNoteFormProps) {
                 key={t}
                 type="button"
                 onClick={() => setNoteType(t)}
-                className="rounded-full border px-3.5 py-2 text-xs font-medium transition-all duration-150"
+                className="rounded-full border px-3.5 py-2 text-xs font-semibold transition-all duration-150"
                 style={
                   active
                     ? { color: meta.color, backgroundColor: meta.bg, borderColor: hexToRgba(meta.color, 0.3) }
-                    : { color: "#84828C", backgroundColor: "#FFFFFF", borderColor: "#E7E5E2" }
+                    : { color: "#75728A", backgroundColor: "#FFFFFF", borderColor: "#ECEAF3" }
                 }
               >
                 {meta.label}
@@ -85,18 +85,11 @@ export function AddNoteForm({ tasks, members, onDone }: AddNoteFormProps) {
       </div>
 
       <div className="flex justify-end gap-3 pt-1">
-        <button
-          type="button"
-          onClick={onDone}
-          className="rounded-xl border border-[#E7E5E2] px-4 py-2.5 text-sm font-medium text-[#54525C] transition-colors hover:bg-[#FAFAF9]"
-        >
+        <button type="button" onClick={onDone} className="btn-secondary">
           Cancel
         </button>
-        <button
-          type="submit"
-          disabled={busy}
-          className="rounded-xl bg-linear-to-b from-[#16171B] to-[#0B0C0F] px-5 py-2.5 text-sm font-medium text-white shadow-[0_1px_2px_rgba(11,12,15,0.08),0_8px_16px_-6px_rgba(11,12,15,0.4)] transition-all duration-200 hover:-translate-y-0.5 disabled:translate-y-0 disabled:opacity-40 disabled:shadow-none"
-        >
+        <button type="submit" disabled={busy || !content.trim()} className="btn-primary">
+          {busy && <span className="spinner" />}
           {busy ? "Adding…" : "Add note"}
         </button>
       </div>

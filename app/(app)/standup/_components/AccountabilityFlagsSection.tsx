@@ -1,6 +1,6 @@
 import type { AccountabilityFlag, Member } from "@/lib/types";
 import { CARD_SHADOW } from "@/lib/card-styles";
-import { CustomSelect } from "./CustomSelect";
+import { CustomSelect } from "@/components/CustomSelect";
 import { FlagCard } from "./FlagCard";
 
 interface AccountabilityFlagsSectionProps {
@@ -18,8 +18,8 @@ export function AccountabilityFlagsSection({
 }: AccountabilityFlagsSectionProps) {
   return (
     <div>
-      <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-xs font-medium text-[#84828C]">Accountability flags · {flags.length}</h2>
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+        <h2 className="text-sm font-bold text-ink">Accountability flags · {flags.length}</h2>
         <CustomSelect
           value={memberFilter}
           onChange={onMemberFilterChange}
@@ -29,9 +29,9 @@ export function AccountabilityFlagsSection({
       </div>
 
       {flags.length === 0 ? (
-        <div className={`rounded-2xl border border-dashed border-[#E7E5E2] bg-white p-6 text-center ${CARD_SHADOW}`}>
-          <p className="text-sm font-medium text-[#0B0C0F]">No repeated commitments without progress</p>
-          <p className="mt-1 text-xs text-[#84828C]">Nothing&apos;s been promised twice and stalled. Nice.</p>
+        <div className={`rounded-2xl border border-dashed border-line-strong bg-white p-6 text-center ${CARD_SHADOW}`}>
+          <p className="text-sm font-bold text-ink">No repeated commitments without progress</p>
+          <p className="mt-1 text-xs text-ink-mute">Nothing&apos;s been promised twice and stalled. Nice.</p>
         </div>
       ) : (
         <div className="space-y-3">

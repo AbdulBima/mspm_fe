@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useAuth } from "@/lib/auth-context";
-import { api } from "@/lib/api";
+import { friendlyAuthError } from "@/components/auth/AuthField";
 
 export function useSignupForm() {
   const { signup } = useAuth();
@@ -14,12 +14,17 @@ export function useSignupForm() {
   const [error, setError] = useState<string | null>(null);
 
   async function submit() {
+    if (submitting) return;
+    if (password.length < 8) {
+      setError("Your password needs at least 8 characters.");
+      return;
+    }
     setError(null);
     setSubmitting(true);
     try {
-      await signup(name.trim(), email.trim(), password, inviteCode.trim() || undefined);
+      await signup(name, email, password, inviteCode || undefined);
     } catch (err) {
-      setError(err instanceof api.ApiError ? err.message : "Something went wrong. Try again.");
+      setError(friendlyAuthError(err));
       setSubmitting(false);
     }
   }

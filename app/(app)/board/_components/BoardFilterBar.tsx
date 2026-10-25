@@ -25,7 +25,7 @@ export function BoardFilterBar({
   onStatusFilterChange,
 }: BoardFilterBarProps) {
   return (
-    <div className="flex items-stretch divide-x divide-[#DEDCD8] rounded-lg border border-[#DEDCD8] bg-[#FAFAF9]">
+    <div className="grid grid-cols-1 divide-y divide-line rounded-xl border border-line-strong bg-white sm:flex sm:divide-x sm:divide-y-0">
       <FilterSelect
         icon={Users}
         value={memberFilter}

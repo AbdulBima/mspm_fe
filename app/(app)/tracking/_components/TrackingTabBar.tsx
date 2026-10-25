@@ -7,18 +7,22 @@ interface TrackingTabBarProps {
 
 export function TrackingTabBar({ tab, onChange }: TrackingTabBarProps) {
   return (
-    <div className="flex w-fit gap-1 rounded-lg border border-[#E7E5E2] bg-[#FAFAF9] p-1">
-      {TABS.map((t) => (
-        <button
-          key={t}
-          onClick={() => onChange(t)}
-          className={`rounded-md px-3.5 py-1.5 text-xs font-medium transition-colors ${
-            tab === t ? "bg-white text-[#0B0C0F] shadow-sm" : "text-[#84828C] hover:text-[#0B0C0F]"
-          }`}
-        >
-          {t}
-        </button>
-      ))}
+    <div className="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
+      <div role="tablist" className="flex w-max gap-1 rounded-2xl border border-line bg-white p-1 shadow-card">
+        {TABS.map((t) => (
+          <button
+            key={t}
+            role="tab"
+            aria-selected={tab === t}
+            onClick={() => onChange(t)}
+            className={`rounded-xl px-4 py-2 text-xs font-semibold whitespace-nowrap transition-all ${
+              tab === t ? "bg-brand text-white shadow-sm" : "text-ink-mute hover:bg-subtle hover:text-ink"
+            }`}
+          >
+            {t}
+          </button>
+        ))}
+      </div>
     </div>
   );
 }

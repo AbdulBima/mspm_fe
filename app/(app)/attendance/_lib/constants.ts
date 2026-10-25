@@ -12,7 +12,7 @@ export const STATUS_META: Record<
   { label: string; icon: typeof Check; color: string; bg: string }
 > = {
   present: { label: "Present", icon: Check, color: "#3F7A5C", bg: "rgba(63,122,92,0.10)" },
-  late: { label: "Late", icon: Clock, color: "#AD8A3D", bg: "rgba(173,138,61,0.14)" },
+  late: { label: "Late", icon: Clock, color: "#6F01D0", bg: "rgba(111,1,208,0.14)" },
   absent: { label: "Absent", icon: X, color: "#9B4A42", bg: "rgba(155,74,66,0.10)" },
   excused: { label: "Excused", icon: Minus, color: "#4A6B8A", bg: "rgba(74,107,138,0.10)" },
 };

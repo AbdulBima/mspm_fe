@@ -7,11 +7,11 @@ export function MessageBubble({ message }: { message: Message }) {
     return (
       <div className="flex justify-end">
         <div
-          className="max-w-[80%] rounded-2xl rounded-br-md px-4 py-2.5 text-sm leading-relaxed"
+          className="max-w-[88%] sm:max-w-[80%] rounded-2xl rounded-br-md px-4 py-2.5 text-sm leading-relaxed"
           style={{
             background: DARK_GRADIENT,
             color: "#FFFFFF",
-            boxShadow: "0 1px 2px rgba(11,12,15,0.08), 0 8px 16px -8px rgba(11,12,15,0.4)",
+            boxShadow: "0 1px 2px rgba(22,18,46,0.08), 0 8px 16px -8px rgba(22,18,46,0.4)",
           }}
         >
           {message.content}
@@ -25,8 +25,8 @@ export function MessageBubble({ message }: { message: Message }) {
       <div className="flex items-start gap-2.5">
         <AIAvatar size={24} iconSize={11} />
         <div
-          className="max-w-[80%] rounded-2xl rounded-tl-md border px-4 py-2.5 text-sm leading-relaxed"
-          style={{ borderColor: "#F5C4B3", backgroundColor: "#FAECE7", color: "#992B0E" }}
+          className="max-w-[88%] sm:max-w-[80%] rounded-2xl rounded-tl-md border px-4 py-2.5 text-sm leading-relaxed"
+          style={{ borderColor: "#FECDD3", backgroundColor: "#FFF1F2", color: "#BE123C" }}
         >
           {message.content}
         </div>
@@ -38,12 +38,12 @@ export function MessageBubble({ message }: { message: Message }) {
     <div className="flex items-start gap-2.5">
       <AIAvatar size={24} iconSize={11} />
       <div
-        className="max-w-[80%] whitespace-pre-line rounded-2xl rounded-tl-md border px-4 py-3 text-sm leading-relaxed"
+        className="max-w-[88%] sm:max-w-[80%] whitespace-pre-line rounded-2xl rounded-tl-md border px-4 py-3 text-sm leading-relaxed"
         style={{
-          borderColor: "#E7E5E2",
+          borderColor: "#ECEAF3",
           backgroundColor: "#FFFFFF",
-          color: "#0B0C0F",
-          boxShadow: "0 1px 2px rgba(11,12,15,0.04), 0 8px 16px -10px rgba(11,12,15,0.10)",
+          color: "#16122E",
+          boxShadow: "0 1px 2px rgba(22,18,46,0.04), 0 8px 16px -10px rgba(22,18,46,0.10)",
         }}
       >
         {message.content}

@@ -1,60 +1,143 @@
-@import url('https://fonts.googleapis.com/css2?family=Gulzar&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Questrial&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Questrial&display=swap');
-
-
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme inline {
+  --font-sans: var(--font-montserrat), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
 }
 
+@theme {
+  --color-brand: #1f0954;
+  --color-brand-hover: #2b1172;
+  --color-brand-soft: #efecf8;
+  --color-accent: #6f01d0;
+  --color-accent-hover: #5c00ad;
+  --color-accent-soft: #f4eafd;
+  --color-gold: #f19a0d;
+  --color-gold-soft: #fef3e0;
 
+  --color-ink: #16122e;
+  --color-ink-soft: #4a4763;
+  --color-ink-mute: #75728a;
+  --color-ink-faint: #a8a5ba;
 
-.gulzarLogo {
-  font-family: "Gulzar", serif;
-  font-weight: 400;
-  font-style: normal;
+  --color-line: #eceaf3;
+  --color-line-strong: #dcd8e8;
+  --color-canvas: #f7f6fb;
+  --color-subtle: #f6f4fb;
+
+  --color-zinc-50: #f8f7fc;
+  --color-zinc-100: #f0eef6;
+  --color-zinc-200: #e4e1ee;
+  --color-zinc-300: #cdc9db;
+  --color-zinc-400: #a29eb6;
+  --color-zinc-500: #76728b;
+  --color-zinc-600: #5a566f;
+  --color-zinc-700: #423e57;
+  --color-zinc-800: #2a2542;
+  --color-zinc-900: #1f0954;
+
+  --color-violet-50: #f7f0fe;
+  --color-violet-100: #eedffd;
+  --color-violet-200: #dcbffb;
+  --color-violet-300: #c495f8;
+  --color-violet-400: #a35ff0;
+  --color-violet-500: #8a2be6;
+  --color-violet-600: #6f01d0;
+  --color-violet-700: #5c00ad;
+  --color-violet-800: #4a008b;
+
+  --shadow-card: 0 1px 2px rgb(31 9 84 / 0.04), 0 8px 24px -12px rgb(31 9 84 / 0.12);
+  --shadow-pop: 0 12px 40px -12px rgb(31 9 84 / 0.28);
+
+  --animate-fade-up: fade-up 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-fade-in: fade-in 0.2s ease-out both;
+  --animate-slide-in-right: slide-in-right 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-slide-in-left: slide-in-left 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes slide-in-right {
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+  @keyframes slide-in-left {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
 }
 
-.questrial-regular {
-  font-family: "Questrial", sans-serif;
-  font-weight: 400;
-  font-style: normal;
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-canvas font-sans text-ink antialiased;
+    font-feature-settings: "cv11", "tnum" 0;
+    letter-spacing: -0.005em;
+  }
+
+  ::selection {
+    background: rgb(111 1 208 / 0.18);
+  }
+
+  :focus-visible {
+    outline-color: var(--color-accent);
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-line-strong) transparent;
+  }
 }
 
-.qquestrial-bold {
-  font-family: "Questrial", sans-serif;
-  font-weight: 700;
-  font-style: normal;
-}
+@layer components {
+  .card {
+    @apply rounded-2xl border border-line bg-white shadow-card;
+  }
 
-.libre-baskerville-regular {
-  font-family: "Libre Baskerville", serif;
-  font-weight: 400;
-  font-style: normal;
-}
+  .eyebrow {
+    @apply text-[11px] font-semibold tracking-wide text-accent uppercase;
+  }
 
-.libre-baskerville-bold {
-  font-family: "Libre Baskerville", serif;
-  font-weight: 700;
-  font-style: normal;
-}
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-brand px-4 py-2.5 text-sm font-semibold text-white shadow-[0_8px_20px_-10px_rgb(31_9_84/0.6)] transition-all duration-200 hover:bg-brand-hover hover:-translate-y-px active:translate-y-0 disabled:pointer-events-none disabled:opacity-50;
+  }
 
-.libre-baskerville-regular-italic {
-  font-family: "Libre Baskerville", serif;
-  font-weight: 400;
-  font-style: italic;
-}
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-line-strong bg-white px-4 py-2.5 text-sm font-semibold text-ink-soft transition-colors duration-200 hover:border-accent/40 hover:text-accent disabled:pointer-events-none disabled:opacity-50;
+  }
 
-
-
-.cinzel {
-  font-family: "Cinzel", serif;
-  font-optical-sizing: auto;
-  font-weight: 500;
-  font-style: normal;
+  .spinner {
+    @apply inline-block h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent;
+  }
 }

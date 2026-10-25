@@ -8,7 +8,7 @@ interface StatusButtonGroupProps {
 
 export function StatusButtonGroup({ activeStatus, onSelect }: StatusButtonGroupProps) {
   return (
-    <div className="flex items-center gap-1.5">
+    <div className="flex flex-wrap items-center gap-1.5">
       {STATUS_ORDER.map((s) => {
         const meta = STATUS_META[s];
         const Icon = meta.icon;
@@ -17,11 +17,11 @@ export function StatusButtonGroup({ activeStatus, onSelect }: StatusButtonGroupP
           <button
             key={s}
             onClick={() => onSelect(s)}
-            className="inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-medium transition-colors"
+            className="inline-flex items-center gap-1 rounded-full border px-2.5 py-1.5 text-[11px] font-semibold transition-colors"
             style={
               active
                 ? { color: meta.color, backgroundColor: meta.bg, borderColor: meta.color }
-                : { color: "#a39c8c", backgroundColor: "transparent", borderColor: "#e3e0d8" }
+                : { color: "#A8A5BA", backgroundColor: "transparent", borderColor: "#ECEAF3" }
             }
           >
             <Icon size={11} />

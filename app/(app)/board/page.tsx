@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useSprint } from "@/lib/sprint-context";
+import { PageLoader } from "@/components/PageLoader";
 import type { TaskStatus } from "@/lib/types";
 
 import { BoardHeader } from "./_components/BoardHeader";
@@ -29,22 +30,15 @@ export default function BoardPage() {
     [tasks, memberFilter, goalFilter, statusFilter]
   );
 
-  if (sprintLoading) {
-    return (
-      <div className="flex h-64 flex-col items-center justify-center gap-3">
-        <div className="h-4 w-4 animate-spin rounded-full border-2 border-[#DEDCD8] border-t-[#1D2B64]" />
-        <p className="text-xs text-[#84828C]">Loading</p>
-      </div>
-    );
-  }
+  if (sprintLoading) return <PageLoader label="Loading board" />;
 
   if (!sprint) {
     return <NoActiveSprintState />;
   }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6 p-6 md:p-4">
-      <div className="flex flex-wrap items-start justify-between gap-4 border-b border-[#DEDCD8] pb-6">
+    <div className="space-y-6">
+      <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
         <BoardHeader sprintName={sprint.name} />
         <BoardFilterBar
           members={members}
@@ -59,9 +53,7 @@ export default function BoardPage() {
       </div>
 
       {loading ? (
-        <div className="flex items-center gap-2.5 py-10 justify-center">
-          <div className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-[#DEDCD8] border-t-[#1D2B64]" />
-        </div>
+        <PageLoader label="Loading tasks" />
       ) : tasks.length === 0 ? (
         <NoTasksState />
       ) : (

@@ -33,17 +33,17 @@ export function CheckinsTab({ sprintId }: { sprintId: string }) {
 
       <TableShell>
         <thead>
-          <tr className="border-b border-[#E7E5E2] bg-[#F3F2EF]">
+          <tr className="border-b border-line bg-subtle">
             <th className={thCls}>Member</th>
             <th className={thCls}>Date</th>
             <th className={`${thCls} w-32`}>Flag</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-[#EEEDEB]">
+        <tbody className="divide-y divide-line">
           {checkins.map((c) => (
-            <tr key={c.checkin_id} className="transition-colors hover:bg-[#FAFAF9]">
-              <td className="px-5 py-3.5 text-sm font-medium text-[#0B0C0F]">{memberName(c.member_id)}</td>
-              <td className="px-5 py-3.5 text-[13px] text-[#54525C]">{formatDate(c.checkin_date)}</td>
+            <tr key={c.checkin_id} className="transition-colors hover:bg-subtle">
+              <td className="px-5 py-3.5 text-sm font-medium text-ink">{memberName(c.member_id)}</td>
+              <td className="px-5 py-3.5 text-[13px] text-ink-soft">{formatDate(c.checkin_date)}</td>
               <td className="px-5 py-3.5">
                 <FlagBadge flag={c.flag} />
               </td>

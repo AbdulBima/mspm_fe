@@ -1,10 +1,11 @@
 "use client";
 
+import { localISODate } from "@/lib/dates";
 import { useState } from "react";
 import { inputClsRounded, labelCls } from "@/lib/form-styles";
 import type { AccountabilityEntry, Member, Task } from "@/lib/types";
 import { CommitmentFields } from "./CommitmentFields";
-import { CustomSelect } from "./CustomSelect";
+import { CustomSelect } from "@/components/CustomSelect";
 
 interface LogCommitmentFormProps {
   sprintId: string;
@@ -16,7 +17,7 @@ interface LogCommitmentFormProps {
 
 export function LogCommitmentForm({ sprintId, members, tasks, entries, onDone }: LogCommitmentFormProps) {
   const [memberId, setMemberId] = useState(members[0]?.member_id ?? "");
-  const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10));
+  const [date, setDate] = useState(() => localISODate());
 
   return (
     <div className="space-y-5">

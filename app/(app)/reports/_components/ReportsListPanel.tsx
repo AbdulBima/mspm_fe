@@ -14,12 +14,12 @@ export function ReportsListPanel({ reports, onSelect }: ReportsListPanelProps) {
         <button
           key={r.report_id}
           onClick={() => onSelect(r)}
-          className="block w-full rounded-xl border border-[#E7E5E2] bg-white p-4 text-left transition-colors hover:border-[#1D2B64]/30"
+          className="card block w-full p-4 text-left transition-all hover:-translate-y-px hover:border-accent/30 hover:shadow-pop"
         >
-          <p className="text-[11px] font-medium text-[#84828C]">
+          <p className="text-[11px] font-semibold text-accent">
             {TYPE_LABEL[r.report_type]} · {formatDateTime(r.created_at)}
           </p>
-          <p className="mt-1 line-clamp-2 text-sm text-[#54525C]">
+          <p className="mt-1 line-clamp-2 text-sm text-ink-soft">
             {r.narrative ?? "No narrative — structured data only."}
           </p>
         </button>

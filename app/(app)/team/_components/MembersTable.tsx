@@ -11,15 +11,18 @@ interface MembersTableProps {
   onSelectMember: (memberId: string) => void;
 }
 
+const TH = "px-4 py-3 text-[11px] font-semibold tracking-wide text-ink-mute uppercase";
+
 export function MembersTable({ grouped, rollupByMember, healthLoading, onSelectMember }: MembersTableProps) {
   return (
-    <div className="overflow-hidden rounded-2xl border border-zinc-100 bg-white">
+    <div className="card overflow-hidden">
       <table className="w-full border-collapse text-left">
         <thead>
-          <tr className="border-b border-zinc-100">
-            <th className="questrial-regular w-[45%] px-4 py-3 text-[10px] font-semibold uppercase tracking-widest text-zinc-400">Member</th>
-            <th className="questrial-regular w-[30%] px-4 py-3 text-[10px] font-semibold uppercase tracking-widest text-zinc-400">Progress</th>
-            <th className="questrial-regular px-4 py-3 text-right text-[10px] font-semibold uppercase tracking-widest text-zinc-400">Status</th>
+          <tr className="border-b border-line">
+            <th className={TH}>Member</th>
+            <th className={`${TH} hidden md:table-cell`}>Progress</th>
+            <th className={`${TH} hidden lg:table-cell`}>Login</th>
+            <th className={`${TH} text-right`}>Status</th>
           </tr>
         </thead>
         <tbody>
@@ -28,16 +31,16 @@ export function MembersTable({ grouped, rollupByMember, healthLoading, onSelectM
             const groupTotal = list.reduce((sum, m) => sum + (rollupByMember.get(m.member_id)?.task_count ?? 0), 0);
             return (
               <Fragment key={discipline}>
-                <tr className="bg-zinc-50/60">
-                  <td colSpan={3} className="px-4 py-2">
+                <tr className="bg-subtle">
+                  <td colSpan={4} className="px-4 py-2">
                     <div className="flex items-center gap-3">
-                      <span className="questrial-regular text-[10px] uppercase tracking-widest text-zinc-400">
+                      <span className="text-[11px] font-semibold tracking-wide text-ink-mute uppercase">
                         {DISCIPLINE_LABEL[discipline]} · {list.length}
                       </span>
                       {groupTotal > 0 && (
-                        <div className="h-1 w-24 overflow-hidden rounded-full bg-zinc-200">
+                        <div className="h-1 w-24 overflow-hidden rounded-full bg-line-strong">
                           <div
-                            className="h-full rounded-full bg-amber-500"
+                            className="h-full rounded-full bg-accent"
                             style={{ width: `${Math.min(100, (groupDone / groupTotal) * 100)}%` }}
                           />
                         </div>
@@ -46,7 +49,13 @@ export function MembersTable({ grouped, rollupByMember, healthLoading, onSelectM
                   </td>
                 </tr>
                 {list.map((m) => (
-                  <MemberRow key={m.member_id} member={m} rollup={rollupByMember.get(m.member_id)} healthLoading={healthLoading} onSelect={() => onSelectMember(m.member_id)} />
+                  <MemberRow
+                    key={m.member_id}
+                    member={m}
+                    rollup={rollupByMember.get(m.member_id)}
+                    healthLoading={healthLoading}
+                    onSelect={() => onSelectMember(m.member_id)}
+                  />
                 ))}
               </Fragment>
             );

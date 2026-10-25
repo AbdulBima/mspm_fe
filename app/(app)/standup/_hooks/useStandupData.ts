@@ -2,14 +2,9 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { api } from "@/lib/api";
+import { notify } from "@/lib/notify";
 import type { AccountabilityEntry, AccountabilityFlag, Member, Task } from "@/lib/types";
 
-/**
- * Loads the accountability breakdown (entries + repeat-commitment flags),
- * the roster, and the sprint's tasks. Unlike the notes page, filtering by
- * member happens client-side against this already-loaded data (see
- * page.tsx's memberFilter memos) rather than as a server param here.
- */
 export function useStandupData(sprintId: string | undefined) {
   const [entries, setEntries] = useState<AccountabilityEntry[]>([]);
   const [flags, setFlags] = useState<AccountabilityFlag[]>([]);
@@ -18,7 +13,6 @@ export function useStandupData(sprintId: string | undefined) {
   const [loading, setLoading] = useState(true);
 
   const reloadFor = useCallback(async (id: string) => {
-    setLoading(true);
     try {
       const [acc, m, t] = await Promise.all([api.checkins.accountability(id), api.members.list(), api.tasks.list(id)]);
       // Newest-first: the accountability endpoint returns entries oldest-first.
@@ -26,6 +20,8 @@ export function useStandupData(sprintId: string | undefined) {
       setFlags(acc.flags);
       setMembers(m);
       setTasks(t);
+    } catch (err) {
+      notify.error(err, "Couldn't load standup data.");
     } finally {
       setLoading(false);
     }

@@ -38,22 +38,22 @@ export function EditTaskForm({ task, goals, onDone }: EditTaskFormProps) {
       className="space-y-5"
     >
       <div>
-        <span className={labelCls}>Title</span>
+        <label className={labelCls}>Title</label>
         <input value={title} onChange={(e) => setTitle(e.target.value)} required className={inputCls} />
       </div>
 
       <div>
-        <span className={labelCls}>What it involves</span>
+        <label className={labelCls}>What it involves</label>
         <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={2} className={inputCls} />
       </div>
 
       <div>
-        <span className={labelCls}>What &quot;done&quot; looks like (expectation)</span>
+        <label className={labelCls}>What &quot;done&quot; looks like (expectation)</label>
         <textarea value={expectation} onChange={(e) => setExpectation(e.target.value)} rows={2} className={inputCls} />
       </div>
 
       <div>
-        <span className={labelCls}>Status</span>
+        <label className={labelCls}>Status</label>
         <select value={status} onChange={(e) => setStatus(e.target.value as TaskStatus)} className={inputCls}>
           {STATUS_OPTIONS.map((s) => (
             <option key={s} value={s}>
@@ -65,7 +65,7 @@ export function EditTaskForm({ task, goals, onDone }: EditTaskFormProps) {
 
       <div className="flex flex-wrap gap-3">
         <div className="min-w-40 flex-1">
-          <span className={labelCls}>Sprint goal</span>
+          <label className={labelCls}>Sprint goal</label>
           <select value={goalId} onChange={(e) => setGoalId(e.target.value)} className={inputCls}>
             <option value="">— No goal linked —</option>
             {goals.map((g) => (
@@ -76,7 +76,7 @@ export function EditTaskForm({ task, goals, onDone }: EditTaskFormProps) {
           </select>
         </div>
         <div>
-          <span className={labelCls}>Priority</span>
+          <label className={labelCls}>Priority</label>
           <select value={priority} onChange={(e) => setPriority(Number(e.target.value))} className={`${inputCls} w-24`}>
             {[1, 2, 3, 4, 5].map((p) => (
               <option key={p} value={p}>
@@ -86,24 +86,17 @@ export function EditTaskForm({ task, goals, onDone }: EditTaskFormProps) {
           </select>
         </div>
         <div>
-          <span className={labelCls}>Due date</span>
+          <label className={labelCls}>Due date</label>
           <input type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} className={inputCls} />
         </div>
       </div>
 
       <div className="flex justify-end gap-3 pt-1">
-        <button
-          type="button"
-          onClick={onDone}
-          className="rounded-lg border border-[#E7E5E2] px-4 py-2.5 text-sm font-medium text-[#54525C] transition-colors hover:bg-[#FAFAF9]"
-        >
+        <button type="button" onClick={onDone} className="btn-secondary">
           Cancel
         </button>
-        <button
-          type="submit"
-          disabled={busy}
-          className="rounded-lg bg-[#0B0C0F] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#1D2B64] disabled:opacity-40"
-        >
+        <button type="submit" disabled={busy} className="btn-primary">
+          {busy && <span className="spinner" />}
           {busy ? "Saving…" : "Save changes"}
         </button>
       </div>

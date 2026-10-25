@@ -34,7 +34,8 @@ export function CheckinForm({ sprintId, members, onDone }: CheckinFormProps) {
 
   return (
     <Drawer
-      title="Log Check-in"
+      eyebrow="Tracking"
+      title="Log check-in"
       onClose={onDone}
       footer={
         <>
@@ -47,7 +48,7 @@ export function CheckinForm({ sprintId, members, onDone }: CheckinFormProps) {
         </>
       }
     >
-      <div className="flex flex-wrap gap-3">
+      <div className="grid gap-3 sm:grid-cols-2">
         <Select label="Member" value={memberId} onChange={setMemberId}>
           {members.map((m) => (
             <option key={m.member_id} value={m.member_id}>

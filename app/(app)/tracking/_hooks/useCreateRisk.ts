@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { notify } from "@/lib/notify";
 import { api } from "@/lib/api";
 import type { RiskKind, RiskSeverity } from "@/lib/types";
 import type { CreateRiskInput } from "../_lib/types";
@@ -27,6 +28,8 @@ export function useCreateRisk(sprintId: string, onDone: () => void) {
       } satisfies CreateRiskInput;
       await api.risks.create(payload);
       onDone();
+    } catch (err) {
+      notify.error(err);
     } finally {
       setBusy(false);
     }

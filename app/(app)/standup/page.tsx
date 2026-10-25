@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { PageLoader } from "@/components/PageLoader";
 import { Drawer } from "@/components/Drawer";
 import { paginate } from "@/lib/pagination";
 import { useSprint } from "@/lib/sprint-context";
@@ -47,10 +48,7 @@ export default function StandupPage() {
 
   if (sprintLoading) {
     return (
-      <div className="flex h-64 flex-col items-center justify-center gap-3">
-        <div className="h-4 w-4 animate-spin rounded-full border-2 border-[#E7E5E2] border-t-[#1D2B64]" />
-        <p className="text-xs text-[#84828C]">Loading</p>
-      </div>
+      <PageLoader label="Loading" />
     );
   }
 
@@ -59,11 +57,11 @@ export default function StandupPage() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto space-y-7 p-6 md:p-8">
+    <div className="mx-auto max-w-5xl space-y-6">
       <StandupHeader disabled={members.length === 0} onLogCommitment={() => setShowLog(true)} />
 
       {showLog && (
-        <Drawer title="Log Standup Commitment" maxWidthCls="max-w-xl" onClose={() => setShowLog(false)}>
+        <Drawer eyebrow="Standup" title="Log commitment" maxWidthCls="max-w-xl" onClose={() => setShowLog(false)}>
           <LogCommitmentForm
             sprintId={sprint.sprint_id}
             members={members}
@@ -82,10 +80,7 @@ export default function StandupPage() {
       <DaySummaryCard sprintId={sprint.sprint_id} />
 
       {loading ? (
-        <div className="flex items-center gap-2.5 justify-center py-10">
-          <div className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-[#E7E5E2] border-t-[#1D2B64]" />
-          <p className="text-xs text-[#84828C]">Loading</p>
-        </div>
+        <PageLoader label="Loading commitments" />
       ) : (
         <>
           <AccountabilityFlagsSection

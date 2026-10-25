@@ -1,27 +1,17 @@
 import { Plus } from "lucide-react";
+import { PageHeader } from "@/components/PageHeader";
 
-interface StandupHeaderProps {
-  disabled: boolean;
-  onLogCommitment: () => void;
-}
-
-export function StandupHeader({ disabled, onLogCommitment }: StandupHeaderProps) {
+export function StandupHeader({ disabled, onLogCommitment }: { disabled: boolean; onLogCommitment: () => void }) {
   return (
-    <div className="flex flex-wrap items-start justify-between gap-4 border-b border-[#E7E5E2] pb-6">
-      <div>
-        <p className="mb-1.5 text-xs font-medium text-[#1D2B64]">Sprint workspace</p>
-        <h1 className="text-2xl font-semibold tracking-tight text-[#0B0C0F]">Standup Commitments</h1>
-        <p className="mt-1.5 max-w-md text-sm text-[#84828C]">
-          What each person says they&apos;ll work on, checked against what actually moved in the days after.
-        </p>
-      </div>
-      <button
-        onClick={onLogCommitment}
-        disabled={disabled}
-        className="inline-flex items-center gap-1.5 rounded-xl bg-linear-to-b from-[#16171B] to-[#0B0C0F] px-4 py-2.5 text-sm font-medium text-white shadow-[0_1px_2px_rgba(11,12,15,0.08),0_10px_20px_-8px_rgba(11,12,15,0.45)] transition-all duration-200 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none"
-      >
-        <Plus size={15} /> Log commitment
-      </button>
-    </div>
+    <PageHeader
+      eyebrow="People"
+      title="Standup commitments"
+      description="What each person says they'll work on, checked against what actually moved in the days after."
+      actions={
+        <button onClick={onLogCommitment} disabled={disabled} className="btn-primary">
+          <Plus size={16} /> Log commitment
+        </button>
+      }
+    />
   );
 }

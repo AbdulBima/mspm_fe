@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { PageLoader } from "@/components/PageLoader";
 import { useSprint } from "@/lib/sprint-context";
 
 import { AlignmentScoreCard } from "./_components/AlignmentScoreCard";
@@ -26,10 +27,7 @@ export default function GoalsPage() {
 
   if (sprintLoading) {
     return (
-      <div className="flex h-64 flex-col items-center justify-center gap-3">
-        <div className="h-4 w-4 animate-spin rounded-full border-2 border-[#E7E5E2] border-t-[#1D2B64]" />
-        <p className="text-xs text-[#84828C]">Loading</p>
-      </div>
+      <PageLoader label="Loading" />
     );
   }
 
@@ -38,7 +36,7 @@ export default function GoalsPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8 p-6 md:p-8">
+    <div className="space-y-6">
       <GoalsHeader onAddGoal={() => setShowForm(true)} />
 
       {showForm && (
@@ -55,10 +53,7 @@ export default function GoalsPage() {
       {alignment && <AlignmentScoreCard alignment={alignment} />}
 
       {loading ? (
-        <div className="flex items-center gap-2.5 py-10 justify-center">
-          <div className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-[#E7E5E2] border-t-[#1D2B64]" />
-          <p className="text-xs text-[#84828C]">Loading</p>
-        </div>
+        <PageLoader label="Loading goals" />
       ) : goals.length === 0 ? (
         <NoGoalsState />
       ) : (

@@ -1,8 +1,3 @@
-/**
- * These mirror pieces of app.api.v1.reports._compile_report_data's real
- * response shape on the backend (built earlier in this project) — not
- * guessed purely from how this page happens to use them.
- */
 export interface TaskSummary {
   title: string;
   member_name: string;
@@ -26,9 +21,17 @@ export interface ReportTotals {
   done_tasks: number;
   blocked_tasks: number;
   open_risks: number;
+  daily_reports_filed?: number;
 }
 
-/** The full report payload shape — matches app.api.v1.reports._compile_report_data's return value exactly. */
+export interface MemberDailyReportSummary {
+  member_name: string;
+  date: string;
+  flag?: string | null;
+  summary: string;
+  blockers?: string | null;
+}
+
 export interface ReportData {
   sprint_name: string;
   totals: ReportTotals;
@@ -38,4 +41,5 @@ export interface ReportData {
   risks_resolved_this_period?: { title: string }[];
   decisions_this_period?: DecisionSummary[];
   open_action_items?: ActionItemSummary[];
+  member_daily_reports?: MemberDailyReportSummary[];
 }

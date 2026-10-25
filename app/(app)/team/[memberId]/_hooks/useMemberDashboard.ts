@@ -10,16 +10,19 @@ export function useMemberDashboard(memberId: string, sprintId: string | undefine
   const [checkins, setCheckins] = useState<Checkin[]>([]);
   const [goals, setGoals] = useState<Goal[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const reloadFor = useCallback(
     async (id: string) => {
-      setLoading(true);
       try {
         const [dashboard, goalList] = await Promise.all([api.members.dashboard(memberId, id), api.sprints.goals(id)]);
         setMember(dashboard.member);
         setTasks(dashboard.tasks);
         setCheckins(dashboard.recent_checkins);
         setGoals(goalList);
+        setError(null);
+      } catch (err) {
+        setError(err instanceof api.ApiError ? err.message : "Couldn't load this team member.");
       } finally {
         setLoading(false);
       }
@@ -31,7 +34,7 @@ export function useMemberDashboard(memberId: string, sprintId: string | undefine
     if (!sprintId) return;
     let cancelled = false;
     queueMicrotask(() => {
-      if (!cancelled) reloadFor(sprintId);
+      if (!cancelled) void reloadFor(sprintId);
     });
     return () => {
       cancelled = true;
@@ -42,5 +45,5 @@ export function useMemberDashboard(memberId: string, sprintId: string | undefine
     if (sprintId) return reloadFor(sprintId);
   }, [sprintId, reloadFor]);
 
-  return { member, tasks, checkins, goals, loading, reload };
+  return { member, tasks, checkins, goals, loading, error, reload };
 }

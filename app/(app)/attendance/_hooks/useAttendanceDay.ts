@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { notify } from "@/lib/notify";
 import { api } from "@/lib/api";
 import type { AttendanceStatus, Member } from "@/lib/types";
 import { EMPTY_ENTRY, type LocalEntry } from "../_lib/types";
@@ -37,6 +38,8 @@ export function useAttendanceDay(sprintId: string | undefined, date: string, mem
       }
       setEntries(map);
       setDirty(false);
+    } catch (err) {
+      notify.error(err);
     } finally {
       setLoading(false);
     }

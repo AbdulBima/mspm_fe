@@ -3,7 +3,7 @@ import { firstInitial } from "../_lib/first-initial";
 
 export function ContributorStack({ contributors }: { contributors: Contributor[] }) {
   if (contributors.length === 0) {
-    return <span className="text-[13px] text-[#B4B2AC]">No one yet</span>;
+    return <span className="text-[13px] text-ink-faint">No one yet</span>;
   }
 
   const shown = contributors.slice(0, 4);
@@ -15,14 +15,14 @@ export function ContributorStack({ contributors }: { contributors: Contributor[]
         <div
           key={member.member_id}
           title={member.name}
-          className="flex h-7 w-7 items-center justify-center rounded-full border-2 border-white text-[11px] font-semibold text-[#0B0C0F]"
+          className="flex h-7 w-7 items-center justify-center rounded-full border-2 border-white text-[11px] font-bold text-brand"
           style={{ backgroundColor: member.color_tag }}
         >
           {firstInitial(member.name)}
         </div>
       ))}
       {extra > 0 && (
-        <div className="flex h-7 w-7 items-center justify-center rounded-full border-2 border-white bg-[#EEEDEB] text-[10px] font-medium text-[#54525C]">
+        <div className="flex h-7 w-7 items-center justify-center rounded-full border-2 border-white bg-line text-[10px] font-medium text-ink-soft">
           +{extra}
         </div>
       )}

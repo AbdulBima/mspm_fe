@@ -2,14 +2,18 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { api } from "@/lib/api";
+import { notify } from "@/lib/notify";
 import type { Report } from "@/lib/types";
 
 export function useReportsList(sprintId: string | undefined) {
   const [reports, setReports] = useState<Report[]>([]);
 
   const reloadFor = useCallback(async (id: string) => {
-    const list = await api.reports.list(id);
-    setReports(list);
+    try {
+      setReports(await api.reports.list(id));
+    } catch (err) {
+      notify.error(err, "Couldn't load reports.");
+    }
   }, []);
 
   useEffect(() => {

@@ -21,16 +21,16 @@ export function ChatInputForm({ input, onInputChange, onSubmit, disabled }: Chat
         e.preventDefault();
         onSubmit();
       }}
-      className="shrink-0 border-t border-[#E7E5E2] pt-4"
+      className="shrink-0 border-t border-line pt-4"
     >
       <div
         className="flex items-end gap-2 rounded-2xl border p-2 transition-all duration-200"
         style={{
           backgroundColor: "#FFFFFF",
-          borderColor: inputFocused ? "#1D2B64" : "#E7E5E2",
+          borderColor: inputFocused ? "#6F01D0" : "#DCD8E8",
           boxShadow: inputFocused
-            ? "0 0 0 3px rgba(29,43,100,0.10), 0 4px 14px -6px rgba(11,12,15,0.18)"
-            : "0 1px 2px rgba(11,12,15,0.04)",
+            ? "0 0 0 4px rgba(111,1,208,0.10), 0 4px 14px -6px rgba(22,18,46,0.18)"
+            : "0 1px 2px rgba(22,18,46,0.04)",
         }}
       >
         <textarea
@@ -47,7 +47,7 @@ export function ChatInputForm({ input, onInputChange, onSubmit, disabled }: Chat
           rows={1}
           placeholder="Ask about this sprint…"
           className="max-h-32 flex-1 resize-none bg-transparent px-2.5 py-1.5 text-sm outline-none"
-          style={{ color: "#0B0C0F" }}
+          style={{ color: "#16122E" }}
         />
         <button
           type="submit"
@@ -55,9 +55,9 @@ export function ChatInputForm({ input, onInputChange, onSubmit, disabled }: Chat
           aria-label="Send"
           className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl transition-all duration-200 disabled:cursor-not-allowed"
           style={{
-            background: canSend ? DARK_GRADIENT : "#EEEDEB",
-            color: canSend ? "#FFFFFF" : "#B4B2AC",
-            boxShadow: canSend ? "0 1px 2px rgba(11,12,15,0.08), 0 8px 16px -6px rgba(11,12,15,0.4)" : "none",
+            background: canSend ? DARK_GRADIENT : "#ECEAF3",
+            color: canSend ? "#FFFFFF" : "#A8A5BA",
+            boxShadow: canSend ? "0 1px 2px rgba(22,18,46,0.08), 0 8px 16px -6px rgba(22,18,46,0.4)" : "none",
           }}
         >
           <ArrowUp size={16} />

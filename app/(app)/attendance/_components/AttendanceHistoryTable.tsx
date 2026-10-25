@@ -16,33 +16,33 @@ function countByStatus(day: AttendanceDay): Record<AttendanceStatus, number> {
 
 export function AttendanceHistoryTable({ history, loading, onSelectDate }: AttendanceHistoryTableProps) {
   return (
-    <div className="overflow-hidden rounded-xl border border-[#e3e0d8] bg-white">
-      <div className="flex items-center gap-2 border-b border-[#e3e0d8] bg-[#faf9f6] px-5 py-3">
-        <History size={13} className="text-[#766f60]" />
-        <p className="text-xs font-medium uppercase tracking-wide text-[#766f60]">Recent sessions</p>
+    <div className="card overflow-hidden">
+      <div className="flex items-center gap-2 border-b border-line bg-subtle px-5 py-3">
+        <History size={13} className="text-ink-mute" />
+        <p className="text-[11px] font-semibold uppercase tracking-wide text-ink-mute">Recent sessions</p>
       </div>
       <div className="overflow-x-auto">
-        <table className="w-full border-collapse text-left">
+        <table className="w-full min-w-[560px] border-collapse text-left">
           <thead>
-            <tr className="border-b border-[#e3e0d8] bg-[#faf9f6]">
-              <th className="px-5 py-2.5 text-[11px] font-medium uppercase tracking-wide text-[#a39c8c]">Date</th>
-              <th className="px-5 py-2.5 text-[11px] font-medium uppercase tracking-wide text-[#a39c8c]">Present</th>
-              <th className="px-5 py-2.5 text-[11px] font-medium uppercase tracking-wide text-[#a39c8c]">Late</th>
-              <th className="px-5 py-2.5 text-[11px] font-medium uppercase tracking-wide text-[#a39c8c]">Absent</th>
-              <th className="px-5 py-2.5 text-[11px] font-medium uppercase tracking-wide text-[#a39c8c]">Excused</th>
-              <th className="px-5 py-2.5 text-right text-[11px] font-medium uppercase tracking-wide text-[#a39c8c]" />
+            <tr className="border-b border-line bg-subtle">
+              <th className="px-5 py-2.5 text-[11px] font-semibold uppercase tracking-wide text-ink-mute">Date</th>
+              <th className="px-5 py-2.5 text-[11px] font-semibold uppercase tracking-wide text-ink-mute">Present</th>
+              <th className="px-5 py-2.5 text-[11px] font-semibold uppercase tracking-wide text-ink-mute">Late</th>
+              <th className="px-5 py-2.5 text-[11px] font-semibold uppercase tracking-wide text-ink-mute">Absent</th>
+              <th className="px-5 py-2.5 text-[11px] font-semibold uppercase tracking-wide text-ink-mute">Excused</th>
+              <th className="px-5 py-2.5 text-right text-[11px] font-semibold uppercase tracking-wide text-ink-mute" />
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#eeece6]">
+          <tbody className="divide-y divide-line">
             {loading ? (
               <tr>
-                <td colSpan={6} className="px-5 py-8 text-center text-sm text-[#766f60]">
+                <td colSpan={6} className="px-5 py-8 text-center text-sm text-ink-mute">
                   Loading history…
                 </td>
               </tr>
             ) : history.length === 0 ? (
               <tr>
-                <td colSpan={6} className="px-5 py-8 text-center text-sm text-[#766f60]">
+                <td colSpan={6} className="px-5 py-8 text-center text-sm text-ink-mute">
                   No attendance logged yet.
                 </td>
               </tr>
@@ -51,18 +51,18 @@ export function AttendanceHistoryTable({ history, loading, onSelectDate }: Atten
                 const c = countByStatus(day);
                 const iso = day.attendance_date.slice(0, 10);
                 return (
-                  <tr key={day.attendance_id} className="transition-colors hover:bg-[#faf9f6]">
-                    <td className="px-5 py-3 text-sm font-medium text-[#1c1917]">
+                  <tr key={day.attendance_id} className="transition-colors hover:bg-subtle">
+                    <td className="px-5 py-3 text-sm font-semibold text-ink">
                       {formatDate(day.attendance_date)}
                     </td>
                     <td className="px-5 py-3 text-sm tabular-nums text-[#3F7A5C]">{c.present || "—"}</td>
-                    <td className="px-5 py-3 text-sm tabular-nums text-[#AD8A3D]">{c.late || "—"}</td>
+                    <td className="px-5 py-3 text-sm tabular-nums text-accent">{c.late || "—"}</td>
                     <td className="px-5 py-3 text-sm tabular-nums text-[#9B4A42]">{c.absent || "—"}</td>
                     <td className="px-5 py-3 text-sm tabular-nums text-[#4A6B8A]">{c.excused || "—"}</td>
                     <td className="px-5 py-3 text-right">
                       <button
                         onClick={() => onSelectDate(iso)}
-                        className="text-xs font-medium text-[#ad8a3d] hover:underline"
+                        className="text-xs font-medium text-accent hover:underline"
                       >
                         View
                       </button>

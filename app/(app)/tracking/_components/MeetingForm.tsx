@@ -12,7 +12,8 @@ export function MeetingForm({ sprintId, onDone }: { sprintId: string; onDone: ()
 
   return (
     <Drawer
-      title="Log Meeting"
+      eyebrow="Tracking"
+      title="Log meeting"
       onClose={onDone}
       footer={
         <>
@@ -25,7 +26,7 @@ export function MeetingForm({ sprintId, onDone }: { sprintId: string; onDone: ()
         </>
       }
     >
-      <div className="flex flex-wrap gap-3">
+      <div className="grid gap-3 sm:grid-cols-2">
         <Select label="Type" value={meetingType} onChange={(v) => setMeetingType(v as MeetingType)}>
           {MEETING_TYPES.map((t) => (
             <option key={t} value={t}>

@@ -35,7 +35,7 @@ export function TasksSection({
   return (
     <div>
       <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-        <h2 className="text-xs font-medium text-[#84828C]">
+        <h2 className="text-sm font-bold text-ink">
           Tasks · {filteredTasks.length}
           {statusFilter !== "all" ? ` of ${totalTaskCount}` : ""}
         </h2>
@@ -43,7 +43,7 @@ export function TasksSection({
           <select
             value={statusFilter}
             onChange={(e) => onStatusFilterChange(e.target.value as TaskStatus | "all")}
-            className="appearance-none rounded-lg border border-[#E7E5E2] bg-white py-1.5 pl-3 pr-7 text-xs font-medium text-[#54525C] outline-none transition-colors hover:border-[#D4D2CC] focus:border-[#1D2B64] focus:ring-2 focus:ring-[#1D2B64]/10"
+            className="appearance-none rounded-xl border border-line-strong bg-white py-2 pl-3 pr-8 text-xs font-semibold text-ink-soft outline-none transition-colors hover:border-accent/40 focus:ring-4 focus:ring-accent/10"
           >
             <option value="all">All statuses</option>
             {STATUS_OPTIONS.map((s) => (
@@ -52,7 +52,7 @@ export function TasksSection({
               </option>
             ))}
           </select>
-          <ChevronDown size={12} className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-[#84828C]" />
+          <ChevronDown size={12} className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-ink-mute" />
         </div>
       </div>
 

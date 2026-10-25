@@ -66,6 +66,10 @@ export interface Goal {
   order: number;
 }
 
+export type Role = "manager" | "member";
+
+export type LoginStatus = "none" | "pending" | "expired" | "active";
+
 export interface Member {
   member_id: string;
   name: string;
@@ -74,6 +78,129 @@ export interface Member {
   email?: string | null;
   color_tag: string;
   active: boolean;
+  login_status?: LoginStatus;
+  access_code_expires_at?: string | null;
+  last_login_at?: string | null;
+  access_code?: string;
+}
+
+export interface MemberProfile {
+  member_id: string;
+  name: string;
+  email?: string | null;
+  role_title?: string | null;
+  discipline?: Discipline | null;
+  color_tag?: string | null;
+}
+
+export type SessionUser = Manager | MemberProfile;
+
+export interface AuthSession {
+  token: string;
+  role: Role;
+  user: SessionUser;
+}
+
+export interface MemberAccess {
+  member_id: string;
+  email?: string | null;
+  login_status: LoginStatus;
+  access_code_expires_at?: string | null;
+  access_code: string;
+}
+
+export interface ReportWindow {
+  report_date: string;
+  timezone: string;
+  opens_at: string;
+  closes_at: string;
+  server_now: string;
+  is_open: boolean;
+  is_working_day: boolean;
+}
+
+export interface DailyReportTask {
+  task_id: string;
+  title: string;
+  status: TaskStatus;
+}
+
+export interface DailyReport {
+  report_id: string;
+  member_id: string;
+  report_date: string;
+  sprint_id?: string | null;
+  summary: string;
+  task_ids: string[];
+  tasks?: DailyReportTask[];
+  blockers?: string | null;
+  plan_tomorrow?: string | null;
+  flag: CheckinFlag;
+  submitted_at: string;
+  updated_at: string;
+  revision?: number;
+}
+
+export interface DailyReportInput {
+  summary: string;
+  task_ids: string[];
+  blockers?: string;
+  plan_tomorrow?: string;
+  flag: CheckinFlag;
+  report_date?: string;
+}
+
+export interface MyDailyReport extends ReportWindow {
+  report: DailyReport | null;
+}
+
+export type ReportDayStatus = "submitted" | "missed" | "open" | "not_tracked";
+
+export interface MyReportHistory {
+  timeline: { date: string; status: ReportDayStatus; report: DailyReport | null }[];
+  weekend_reports: DailyReport[];
+  stats: { submitted: number; missed: number; streak: number };
+}
+
+export interface DailyReportMember {
+  member_id: string;
+  name: string;
+  role_title?: string | null;
+  discipline?: Discipline | null;
+  color_tag?: string | null;
+  login_status: LoginStatus;
+}
+
+export interface TeamDailyReports extends ReportWindow {
+  submitted: (DailyReport & { member: DailyReportMember })[];
+  missing: DailyReportMember[];
+  totals: { expected: number; submitted: number; missing: number };
+}
+
+export interface MemberSprintBrief {
+  sprint_id: string;
+  name: string;
+  theme?: string | null;
+  status: SprintStatus;
+  day_number: number;
+  working_days: number;
+}
+
+export interface MyProfile extends MemberProfile {
+  sprint: MemberSprintBrief | null;
+}
+
+export interface MyTask {
+  task_id: string;
+  title: string;
+  status: TaskStatus;
+  priority: number;
+  due_date?: string | null;
+  expectation?: string | null;
+  description?: string | null;
+  goal_id?: string | null;
+  is_stale?: boolean;
+  is_overdue?: boolean;
 }
 
 export interface TaskNote {
@@ -170,18 +297,6 @@ export interface TaskBrief {
   member_id: string;
   status: TaskStatus;
 }
-
-export interface MemberRollup {
-  member_id: string;
-  name: string;
-  role_title: string;
-  task_count: number;
-  done_count: number;
-  blocked_count: number;
-  stale_count: number;
-  overdue_count: number;
-}
-
 
 export interface AlignmentGoal {
   goal_id: string;

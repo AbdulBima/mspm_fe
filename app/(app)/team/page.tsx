@@ -2,7 +2,6 @@
 
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { AnimatePresence } from "framer-motion";
 import { useBlobDownload } from "@/hooks/useBlobDownload";
 import { api } from "@/lib/api";
 import { useSprint } from "@/lib/sprint-context";
@@ -68,7 +67,7 @@ export default function TeamPage() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8 p-4 md:p-6">
+    <div className="mx-auto max-w-5xl space-y-6">
       <TeamHeader
         downloadingReview={downloadingReview}
         exportDisabled={!sprint}
@@ -80,17 +79,15 @@ export default function TeamPage() {
         <TeamSummary total={summary.total} blocked={summary.blocked} stale={summary.stale} query={query} onQueryChange={setQuery} />
       )}
 
-      <AnimatePresence>
-        {showForm && (
-          <AddMemberDrawer
-            onClose={() => setShowForm(false)}
-            onDone={() => {
-              setShowForm(false);
-              refresh();
-            }}
-          />
-        )}
-      </AnimatePresence>
+      {showForm && (
+        <AddMemberDrawer
+          onClose={() => setShowForm(false)}
+          onDone={() => {
+            setShowForm(false);
+            refresh();
+          }}
+        />
+      )}
 
       {membersLoading ? (
         <SkeletonTable />
