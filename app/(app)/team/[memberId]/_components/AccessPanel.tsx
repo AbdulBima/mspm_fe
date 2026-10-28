@@ -1,11 +1,12 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { KeyRound, ShieldOff } from "lucide-react";
+import { KeyRound, Mail, ShieldOff } from "lucide-react";
 import { api } from "@/lib/api";
 import { notify } from "@/lib/notify";
 import type { Member, MemberAccess } from "@/lib/types";
 import { AccessCodeCard } from "@/components/AccessCodeCard";
+import { inputCls } from "@/lib/form-styles";
 import { LoginBadge } from "../../_components/LoginBadge";
 
 function when(iso?: string | null) {
@@ -18,6 +19,7 @@ export function AccessPanel({ memberId }: { memberId: string }) {
   const [member, setMember] = useState<Member | null>(null);
   const [issued, setIssued] = useState<MemberAccess | null>(null);
   const [busy, setBusy] = useState(false);
+  const [email, setEmail] = useState("");
 
   const load = useCallback(async () => {
     try {
@@ -41,6 +43,21 @@ export function AccessPanel({ memberId }: { memberId: string }) {
       await load();
     } catch (err) {
       notify.error(err, "Couldn't create an access code.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function saveEmailAndInvite() {
+    if (busy || !email.trim()) return;
+    setBusy(true);
+    try {
+      await api.members.update(memberId, { email: email.trim() });
+      setIssued(await api.members.issueAccess(memberId));
+      setEmail("");
+      await load();
+    } catch (err) {
+      notify.error(err, "Couldn't save that email.");
     } finally {
       setBusy(false);
     }
@@ -76,7 +93,7 @@ export function AccessPanel({ memberId }: { memberId: string }) {
 
       <p className="mt-2 text-sm text-ink-mute">
         {!member.email
-          ? "Add an email address to this member to give them a login."
+          ? "Add their email below to give them a login for daily reports."
           : status === "active"
             ? `Signed in as ${member.email}${member.last_login_at ? ` · last seen ${when(member.last_login_at)}` : ""}.`
             : status === "pending"
@@ -90,6 +107,29 @@ export function AccessPanel({ memberId }: { memberId: string }) {
         <div className="mt-4">
           <AccessCodeCard name={member.name} email={member.email} code={issued.access_code} expiresAt={issued.access_code_expires_at} />
         </div>
+      )}
+
+      {!member.email && !issued && (
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            void saveEmailAndInvite();
+          }}
+          className="mt-4 flex flex-col gap-2 sm:flex-row"
+        >
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="their@email.com"
+            className={inputCls}
+            required
+          />
+          <button type="submit" disabled={busy || !email.trim()} className="btn-primary shrink-0 text-xs">
+            {busy ? <span className="spinner" /> : <Mail size={14} />}
+            Save & invite
+          </button>
+        </form>
       )}
 
       {member.email && (
